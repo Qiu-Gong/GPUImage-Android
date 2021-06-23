@@ -1,0 +1,32 @@
+apply plugin: 'maven'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+uploadArchives {
+
+    def GITHUB_REPO_PATH = "../release/"
+    repositories.mavenDeployer {
+        repository(url: "file://${file(GITHUB_REPO_PATH).absolutePath}")
+        pom.project {
+            groupId project.ext.mavenGroupId
+            artifactId project.ext.mavenArtifactId
+            version project.ext.mavenVersion
+        }
+    }
+
+    task sourcesJar(type: Jar) {
+        from android.sourceSets.main.java.srcDirs
+        classifier = 'sources'
+    }
+
+    artifacts {
+//        archives sourcesJar
+    }
+
+    doLast {
+        print "Success deployed version: " + project.version
+    }
+}
