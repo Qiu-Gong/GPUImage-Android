@@ -26,7 +26,7 @@ class SurfaceView(context: Context, attrs: AttributeSet) :
     private inner class SurfaceCallbackImpl : SurfaceHolder.Callback {
         override fun surfaceCreated(p0: SurfaceHolder) {
             Logger.d(TAG, "surfaceCreated")
-            glView.viewCreate(p0)
+            glView.viewCreate(p0.surface)
         }
 
         override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {

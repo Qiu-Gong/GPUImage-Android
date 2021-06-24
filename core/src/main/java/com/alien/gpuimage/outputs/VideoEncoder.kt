@@ -5,14 +5,13 @@ import android.media.MediaFormat
 import android.os.Handler
 import android.view.Surface
 import com.alien.gpuimage.Framebuffer
-import com.alien.gpuimage.GLContext
 import com.alien.gpuimage.RotationMode
 import com.alien.gpuimage.Size
-import com.alien.gpuimage.egl.EglSurfaceBase
-import com.alien.gpuimage.egl.WindowSurface
 import com.alien.gpuimage.external.video.EncoderMediaCodec
 import com.alien.gpuimage.external.video.MediaMuxerImpl
+import com.alien.gpuimage.outputs.widget.GLView
 import com.alien.gpuimage.sources.Input
+import com.alien.gpuimage.utils.Logger
 import java.nio.ByteBuffer
 
 /**
@@ -25,12 +24,12 @@ class VideoEncoder(
 ) : Input {
 
     companion object {
-
+        private const val TAG = "VideoEncoder"
     }
 
     private var muxer: MediaMuxerImpl? = null
     private var encoder: EncoderMediaCodec? = null
-    private var eglSurface: EglSurfaceBase? = null
+    private val glView: GLView = GLView()
 
     init {
         init(path)
@@ -47,42 +46,50 @@ class VideoEncoder(
     }
 
     override fun setInputSize(inputSize: Size?) {
+        glView.setInputSize(inputSize)
     }
 
     override fun setInputFramebuffer(framebuffer: Framebuffer?) {
+        glView.setInputFramebuffer(framebuffer)
     }
 
     override fun setInputRotation(inputRotation: RotationMode) {
+        glView.setInputRotation(inputRotation)
     }
 
     override fun newFrameReadyAtTime(time: Long) {
-        eglSurface?.makeCurrent()
-        eglSurface?.setPresentationTime(time * 1000)
-        eglSurface?.swapBuffers()
+        glView.newFrameReadyAtTime(time)
     }
 
     private inner class EncoderMediaCodecCallback : EncoderMediaCodec.EncoderInfoCallback {
         override fun onPrepared(surface: Surface?) {
-            runSynchronouslyGpu {
-                eglSurface =
-                    WindowSurface(GLContext.sharedProcessingContext()?.eglCore, surface, true)
-                eglSurface?.makeCurrent()
-            }
+            Logger.d(TAG, "onPrepared")
+            val width = format.getInteger(MediaFormat.KEY_WIDTH)
+            val height = format.getInteger(MediaFormat.KEY_HEIGHT)
+            glView.viewCreate(surface)
+            glView.viewChange(width, height)
         }
 
         override fun onOutputFormatChanged(outputFormat: MediaFormat?) {
+            Logger.d(TAG, "onOutputFormatChanged")
             muxer?.addVideoTrack(outputFormat)
             muxer?.start()
         }
 
         override fun onDataAvailable(byteBuffer: ByteBuffer?, bufferInfo: MediaCodec.BufferInfo?) {
+            Logger.d(
+                TAG,
+                "onDataAvailable bufferInfo: flags=${bufferInfo?.flags} time=${bufferInfo?.presentationTimeUs} size=${bufferInfo?.size} offset=${bufferInfo?.offset}"
+            )
             muxer?.writeVideoData(byteBuffer, bufferInfo)
         }
 
         override fun onFinish() {
+            Logger.d(TAG, "onFinish")
         }
 
         override fun onError(errorCode: Int) {
+            Logger.d(TAG, "onError")
         }
     }
 
@@ -90,6 +97,7 @@ class VideoEncoder(
      * 编码
      */
     fun drainEncoder() {
+        Logger.d(TAG, "drainEncoder")
         handler.post {
             encoder?.drain()
         }
@@ -99,15 +107,17 @@ class VideoEncoder(
      * 结束合成
      */
     fun finish() {
-        encoder?.stop()
+        Logger.d(TAG, "finish")
+        handler.post {
+            encoder?.stop()
+        }
     }
 
     fun release() {
+        Logger.d(TAG, "release")
         encoder?.release()
         muxer?.close()
 
-        runSynchronouslyGpu {
-            eglSurface?.releaseEglSurface()
-        }
+        glView.viewDestroyed()
     }
 }

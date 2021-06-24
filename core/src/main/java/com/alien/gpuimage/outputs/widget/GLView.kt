@@ -2,7 +2,7 @@ package com.alien.gpuimage.outputs.widget
 
 import android.graphics.SurfaceTexture
 import android.opengl.GLES20
-import android.view.SurfaceHolder
+import android.view.Surface
 import com.alien.gpuimage.*
 import com.alien.gpuimage.egl.EglSurfaceBase
 import com.alien.gpuimage.egl.WindowSurface
@@ -203,7 +203,8 @@ class GLView : Input {
             false, 0, textureCoordinates
         )
 
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
+        eglSurface?.setPresentationTime(time * 1000)
         eglSurface?.swapBuffers()
 
         GLES20.glDisableVertexAttribArray(positionAttribute)
@@ -214,12 +215,12 @@ class GLView : Input {
         callback?.onViewSwapToScreen()
     }
 
-    fun viewCreate(any: Any) {
+    fun viewCreate(any: Any?) {
         runSynchronouslyGpu {
-            if (any is SurfaceHolder) {
+            if (any is Surface) {
                 eglSurface =
                     WindowSurface(
-                        GLContext.sharedProcessingContext()?.eglCore, any.surface, true
+                        GLContext.sharedProcessingContext()?.eglCore, any, true
                     )
             } else if (any is SurfaceTexture) {
                 eglSurface = WindowSurface(GLContext.sharedProcessingContext()?.eglCore, any)

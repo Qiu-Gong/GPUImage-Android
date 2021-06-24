@@ -66,6 +66,7 @@ class VideoActivity : AppCompatActivity() {
         textFilter = WatermarkFilter(watermark)
         videoDecoder?.addTarget(textFilter)
         textFilter?.addTarget(surfaceView)
+        textFilter?.addTarget(videoEncoder)
         videoDecoder?.setCallback(object : VideoDecoder.VideoDecoderCallback {
 
             private var positionX = 0
