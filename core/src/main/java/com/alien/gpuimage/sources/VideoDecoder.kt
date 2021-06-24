@@ -12,12 +12,45 @@ import com.alien.gpuimage.external.video.VideoFormat
 import com.alien.gpuimage.outputs.Output
 import com.alien.gpuimage.sources.widget.GLOesTexture
 
+/**
+ * 视频解码
+ */
 class VideoDecoder(path: String, private val handler: Handler) : Output() {
 
     private val glOesTexture: GLOesTexture = GLOesTexture()
     private var extractor: MediaExtractor? = null
     private var decoder: DecoderMediaCodec? = null
-    private var callback: GLOesTexture.OesTextureCallback? = null
+    private var inFormat: MediaFormat? = null
+    private var callback: VideoDecoderCallback? = null
+
+    var videoWidth: Int = 0
+        private set
+    var videoHeight: Int = 0
+        private set
+    var videoRotation: Int = 0
+        private set
+
+    interface VideoDecoderCallback {
+        /**
+         * 解码准备就绪
+         */
+        fun onPrepared()
+
+        /**
+         * 帧可用之前
+         */
+        fun onFrameAvailableBefore(presentationTimeUs: Long)
+
+        /**
+         * 帧可用之后
+         */
+        fun onFrameAvailableAfter(presentationTimeUs: Long)
+
+        /**
+         * 解码结束
+         */
+        fun onFinish()
+    }
 
     init {
         init(path)
@@ -32,30 +65,23 @@ class VideoDecoder(path: String, private val handler: Handler) : Output() {
         // 编码器初始化
         extractor = MediaExtractor()
         extractor?.setDataSource(inPath)
-        val inFormat = VideoFormat.selectVideoTrack(extractor!!)
+        inFormat = VideoFormat.selectVideoTrack(extractor!!)
 
-        // 设置宽高
+        // 设置宽高方向
+        videoWidth = inFormat?.getInteger(MediaFormat.KEY_WIDTH) ?: 0
+        videoHeight = inFormat?.getInteger(MediaFormat.KEY_HEIGHT) ?: 0
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-            && inFormat.containsKey(MediaFormat.KEY_ROTATION)
+            && inFormat?.containsKey(MediaFormat.KEY_ROTATION) == true
         ) {
-            val rotation = inFormat.getInteger(MediaFormat.KEY_ROTATION)
-            glOesTexture.setOesRotation(rotation)
-            if (rotation == 270 || rotation == 90) {
-                glOesTexture.setOesSize(
-                    inFormat.getInteger(MediaFormat.KEY_HEIGHT),
-                    inFormat.getInteger(MediaFormat.KEY_WIDTH)
-                )
+            videoRotation = inFormat?.getInteger(MediaFormat.KEY_ROTATION) ?: 0
+            glOesTexture.setOesRotation(videoRotation)
+            if (videoRotation == 270 || videoRotation == 90) {
+                glOesTexture.setOesSize(videoHeight, videoWidth)
             } else {
-                glOesTexture.setOesSize(
-                    inFormat.getInteger(MediaFormat.KEY_WIDTH),
-                    inFormat.getInteger(MediaFormat.KEY_HEIGHT)
-                )
+                glOesTexture.setOesSize(videoWidth, videoHeight)
             }
         } else {
-            glOesTexture.setOesSize(
-                inFormat.getInteger(MediaFormat.KEY_WIDTH),
-                inFormat.getInteger(MediaFormat.KEY_HEIGHT)
-            )
+            glOesTexture.setOesSize(videoWidth, videoHeight)
         }
 
         // 创建 Program
@@ -77,7 +103,7 @@ class VideoDecoder(path: String, private val handler: Handler) : Output() {
         decoder?.release()
     }
 
-    fun setCallback(callback: GLOesTexture.OesTextureCallback) {
+    fun setCallback(callback: VideoDecoderCallback) {
         this.callback = callback
     }
 
@@ -100,8 +126,9 @@ class VideoDecoder(path: String, private val handler: Handler) : Output() {
         override fun onOutputFormatChanged(outputFormat: MediaFormat?) = Unit
 
         override fun onFrameAvailable(surfaceTexture: SurfaceTexture?, presentationTimeUs: Long) {
-            callback?.onFrameAvailable(presentationTimeUs)
+            callback?.onFrameAvailableBefore(presentationTimeUs)
             glOesTexture.onFrameAvailable(surfaceTexture, presentationTimeUs)
+            callback?.onFrameAvailableAfter(presentationTimeUs)
         }
 
         /**

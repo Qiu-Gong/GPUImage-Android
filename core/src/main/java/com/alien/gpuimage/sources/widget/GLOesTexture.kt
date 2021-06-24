@@ -37,12 +37,6 @@ class GLOesTexture : Output() {
             """
     }
 
-    interface OesTextureCallback {
-        fun onPrepared()
-        fun onFrameAvailable(presentationTimeUs: Long)
-        fun onFinish()
-    }
-
     private var oesTexture: Int = -1
     private var oesProgram: GLProgram? = null
     private var positionAttribute: Int = 0

@@ -2,14 +2,12 @@ package com.alien.gpuimage.external.video
 
 import android.media.MediaCodec
 import android.media.MediaFormat
-import android.os.Handler
 import android.util.Log
 import android.view.Surface
 import java.nio.ByteBuffer
 
 class EncoderMediaCodec(
     private val callback: EncoderInfoCallback?,
-    private val handler: Handler
 ) : BaseMediaCodec() {
 
     companion object {
@@ -34,7 +32,7 @@ class EncoderMediaCodec(
         mediaCodec = MediaCodec.createEncoderByType(OUT_MIME_TYPE)
     }
 
-    override fun prepare(format: MediaFormat, texId: Int?) {
+    override fun prepare(format: MediaFormat?, texId: Int?) {
         if (state.get() != STATE_RELEASE) {
             Log.e(TAG, "prepare() Error")
             return
@@ -49,7 +47,7 @@ class EncoderMediaCodec(
         surface = mediaCodec?.createInputSurface()
         callback?.onPrepared(surface)
         if (ENABLE_LOG) {
-            Log.d(TAG, "prepare")
+            Log.d(TAG, "prepare()")
         }
     }
 

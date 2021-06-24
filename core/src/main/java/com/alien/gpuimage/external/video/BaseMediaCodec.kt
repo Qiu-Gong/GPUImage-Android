@@ -22,7 +22,7 @@ abstract class BaseMediaCodec {
         const val STATE_RELEASE = 6
     }
 
-    abstract fun prepare(format: MediaFormat, texId: Int? = null)
+    abstract fun prepare(format: MediaFormat?, texId: Int? = null)
 
     abstract fun start()
 

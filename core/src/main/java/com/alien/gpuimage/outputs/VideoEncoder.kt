@@ -15,7 +15,18 @@ import com.alien.gpuimage.external.video.MediaMuxerImpl
 import com.alien.gpuimage.sources.Input
 import java.nio.ByteBuffer
 
-class VideoEncoder(path: String, private val handler: Handler) : Input {
+/**
+ * 视频编码
+ */
+class VideoEncoder(
+    path: String,
+    private val format: MediaFormat,
+    private val handler: Handler
+) : Input {
+
+    companion object {
+
+    }
 
     private var muxer: MediaMuxerImpl? = null
     private var encoder: EncoderMediaCodec? = null
@@ -26,10 +37,9 @@ class VideoEncoder(path: String, private val handler: Handler) : Input {
     }
 
     private fun init(outPath: String) {
-
         // Configure the encoder
-        encoder = EncoderMediaCodec(EncoderMediaCodecCallback(), handler)
-//        encoder?.prepare(outFormat)
+        encoder = EncoderMediaCodec(EncoderMediaCodecCallback())
+        encoder?.prepare(format)
         encoder?.start()
 
         // Init muxer
@@ -46,14 +56,18 @@ class VideoEncoder(path: String, private val handler: Handler) : Input {
     }
 
     override fun newFrameReadyAtTime(time: Long) {
+        eglSurface?.makeCurrent()
         eglSurface?.setPresentationTime(time * 1000)
         eglSurface?.swapBuffers()
     }
 
     private inner class EncoderMediaCodecCallback : EncoderMediaCodec.EncoderInfoCallback {
         override fun onPrepared(surface: Surface?) {
-            eglSurface = WindowSurface(GLContext.sharedProcessingContext()?.eglCore, surface, true)
-            eglSurface?.makeCurrent()
+            runSynchronouslyGpu {
+                eglSurface =
+                    WindowSurface(GLContext.sharedProcessingContext()?.eglCore, surface, true)
+                eglSurface?.makeCurrent()
+            }
         }
 
         override fun onOutputFormatChanged(outputFormat: MediaFormat?) {
@@ -70,6 +84,22 @@ class VideoEncoder(path: String, private val handler: Handler) : Input {
 
         override fun onError(errorCode: Int) {
         }
+    }
+
+    /**
+     * 编码
+     */
+    fun drainEncoder() {
+        handler.post {
+            encoder?.drain()
+        }
+    }
+
+    /**
+     * 结束合成
+     */
+    fun finish() {
+        encoder?.stop()
     }
 
     fun release() {

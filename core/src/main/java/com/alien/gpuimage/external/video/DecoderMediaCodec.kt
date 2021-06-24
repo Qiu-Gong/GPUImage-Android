@@ -35,7 +35,7 @@ class DecoderMediaCodec(
     private var outputSurface: Surface? = null
     private var lastPresentationTimeUs: Long = 0
 
-    override fun prepare(format: MediaFormat, texId: Int?) {
+    override fun prepare(format: MediaFormat?, texId: Int?) {
         if (mediaCodec != null || state.get() != STATE_RELEASE) {
             Logger.e(TAG, "prepare() Error")
             return
@@ -50,7 +50,7 @@ class DecoderMediaCodec(
             callback?.onFrameAvailable(surfaceTexture, lastPresentationTimeUs)
         }, handler)
 
-        val type = format.getString(MediaFormat.KEY_MIME) ?: OUT_MIME_TYPE
+        val type = format?.getString(MediaFormat.KEY_MIME) ?: OUT_MIME_TYPE
         mediaCodec = MediaCodec.createDecoderByType(type)
         mediaCodec?.configure(format, outputSurface, null, 0)
 
