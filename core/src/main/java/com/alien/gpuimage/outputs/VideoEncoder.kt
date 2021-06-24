@@ -77,10 +77,10 @@ class VideoEncoder(
         }
 
         override fun onDataAvailable(byteBuffer: ByteBuffer?, bufferInfo: MediaCodec.BufferInfo?) {
-            Logger.d(
-                TAG,
-                "onDataAvailable bufferInfo: flags=${bufferInfo?.flags} time=${bufferInfo?.presentationTimeUs} size=${bufferInfo?.size} offset=${bufferInfo?.offset}"
-            )
+//            Logger.d(
+//                TAG,
+//                "onDataAvailable bufferInfo: flags=${bufferInfo?.flags} time=${bufferInfo?.presentationTimeUs} size=${bufferInfo?.size} offset=${bufferInfo?.offset}"
+//            )
             muxer?.writeVideoData(byteBuffer, bufferInfo)
         }
 

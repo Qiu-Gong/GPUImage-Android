@@ -97,7 +97,7 @@ class VideoActivity : AppCompatActivity() {
                 }
                 false -> {
                     videoDecoder?.feedInputToDecoder()
-//                    surfaceView?.postDelayed(running, 30)
+                    surfaceView?.postDelayed(running, 30)
                 }
             }
         }
