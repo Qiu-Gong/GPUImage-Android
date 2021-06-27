@@ -9,7 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="选图"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,12 +32,21 @@
         app:layout_constraintTop_toBottomOf="@id/select_surface_view" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/transform_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transform"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/select_texture_view" />
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/select_video"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Video"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/select_texture_view" />
+        app:layout_constraintTop_toBottomOf="@id/transform_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

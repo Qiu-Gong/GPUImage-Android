@@ -25,6 +25,7 @@
         <activity android:name=".SurfaceViewActivity" />
         <activity android:name=".TextureViewActivity" />
         <activity android:name=".VideoActivity" />
+        <activity android:name=".TransformActivity" />
     </application>
 
 </manifest>

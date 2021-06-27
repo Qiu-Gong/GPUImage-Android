@@ -44,6 +44,10 @@ class MainActivity : AppCompatActivity() {
 //            clickListener(it.id)
             VideoActivity.startActivity(this, "/sdcard/DCIM/Camera/video_20210519_173718.mp4")
         }
+
+        findViewById<View>(R.id.transform_view).setOnClickListener {
+            clickListener(it.id)
+        }
     }
 
     private fun clickListener(id: Int) {
@@ -111,6 +115,8 @@ class MainActivity : AppCompatActivity() {
                     TextureViewActivity.startActivity(this, path)
                 } else if (type == R.id.select_video) {
                     VideoActivity.startActivity(this, path)
+                } else if (type == R.id.transform_view) {
+                    TransformActivity.startActivity(this, path)
                 }
             }
         }
