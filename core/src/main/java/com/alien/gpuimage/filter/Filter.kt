@@ -152,7 +152,7 @@ open class Filter(
         inputFramebuffer?.unlock()
     }
 
-    private fun informTargetsAboutNewFrameAtTime(time: Long) {
+    open fun informTargetsAboutNewFrameAtTime(time: Long) {
         targets.forEachIndexed { _, input ->
             input.setInputRotation(inputRotation)
             input.setInputSize(inputSize)
@@ -176,12 +176,31 @@ open class Filter(
         }
     }
 
+    fun getInputSize(): Size? {
+        return this.inputSize
+    }
+
+    fun getInputRotation(): RotationMode {
+        return this.inputRotation
+    }
+
     fun setFloat(floatValue: Float, uniform: Int, shaderProgram: GLProgram?) {
         runAsynchronouslyGpu {
             GLContext.setActiveShaderProgram(shaderProgram)
             setAndExecuteUniformStateCallbackAtIndex(uniform, object : Callback {
                 override fun function() {
                     GLES20.glUniform1f(uniform, floatValue)
+                }
+            })
+        }
+    }
+
+    fun setUniformMatrix4f(matrix: FloatArray, uniform: Int, shaderProgram: GLProgram?) {
+        runAsynchronouslyGpu {
+            GLContext.setActiveShaderProgram(shaderProgram)
+            setAndExecuteUniformStateCallbackAtIndex(uniform, object : Callback {
+                override fun function() {
+                    GLES20.glUniformMatrix4fv(uniform, 1, false, matrix, 0)
                 }
             })
         }
