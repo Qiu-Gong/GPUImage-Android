@@ -53,6 +53,16 @@ class Picture : Output {
         }
     }
 
+    fun processPictureSynchronously() {
+        runSynchronously {
+            targets.forEachIndexed { _, input ->
+                input.setInputSize(pixelSizeOfImage)
+                input.setInputFramebuffer(outputFramebuffer)
+                input.newFrameReadyAtTime(System.currentTimeMillis())
+            }
+        }
+    }
+
     private fun loadImageToFBO() {
         hasProcessedImage = false
         assert(bitmap?.width ?: 0 > 0 && bitmap?.height ?: 0 > 0)
