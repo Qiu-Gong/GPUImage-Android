@@ -184,6 +184,10 @@ open class Filter(
         return this.inputRotation
     }
 
+    fun getInputFramebuffer(): Framebuffer? {
+        return this.inputFramebuffer
+    }
+
     fun setFloat(floatValue: Float, uniform: Int, shaderProgram: GLProgram?) {
         runAsynchronouslyGpu {
             GLContext.setActiveShaderProgram(shaderProgram)
