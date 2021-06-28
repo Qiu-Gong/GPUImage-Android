@@ -10,7 +10,7 @@ import com.alien.gpuimage.outputs.widget.GLView
 import com.alien.gpuimage.sources.Input
 import com.alien.gpuimage.utils.Logger
 
-class SurfaceView(context: Context, attrs: AttributeSet) :
+open class SurfaceView(context: Context, attrs: AttributeSet) :
     android.view.SurfaceView(context, attrs), Input {
 
     companion object {
