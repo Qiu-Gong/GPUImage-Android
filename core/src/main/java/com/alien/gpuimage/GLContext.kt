@@ -33,6 +33,7 @@ class GLContext(createContext: Boolean = false) {
             return currentContext
         }
 
+        @JvmStatic
         fun sharedFramebufferCache(): FramebufferCache? {
             return sharedProcessingContext()?.framebufferCache
         }
