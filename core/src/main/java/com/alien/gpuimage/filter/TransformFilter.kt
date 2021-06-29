@@ -35,7 +35,7 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
                     -1.0f, -1.0f,
                     1.0f, -1.0f,
                     -1.0f, 1.0f,
-                    1.0f, 1.0f,
+                    1.0f, 1.0f
                 )
             )
 
@@ -45,7 +45,7 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
                     0.0f, 0.0f,
                     1.0f, 0.0f,
                     0.0f, 1.0f,
-                    1.0f, 1.0f,
+                    1.0f, 1.0f
                 )
             )
     }
@@ -71,12 +71,12 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
         transform3D = FloatArray(16)
         Matrix.setIdentityM(transform3D, 0)
 
-        runSynchronouslyGpu {
+        runSynchronouslyGpu(Runnable {
             transformMatrixUniform = filterProgram?.uniformIndex("transformMatrix") ?: 0
             orthographicMatrixUniform = filterProgram?.uniformIndex("orthographicMatrix") ?: 0
             setUniformMatrix4f(transform3D!!, transformMatrixUniform, filterProgram)
             setUniformMatrix4f(orthographicMatrix!!, orthographicMatrixUniform, filterProgram)
-        }
+        })
     }
 
     override fun newFrameReadyAtTime(time: Long) {

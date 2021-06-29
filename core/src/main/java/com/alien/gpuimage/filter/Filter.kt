@@ -54,7 +54,7 @@ open class Filter(
     private val uniformStateRestoration = HashMap<Int, Callback>()
 
     init {
-        this.runSynchronouslyGpu {
+        this.runSynchronouslyGpu(Runnable {
             if (!TextUtils.isEmpty(vertexShader) && !TextUtils.isEmpty(fragmentShader)) {
                 filterProgram = GLContext.program(vertexShader!!, fragmentShader!!)
                 filterProgram?.addAttribute("position")
@@ -76,7 +76,7 @@ open class Filter(
                     filterProgram?.attributeIndex("inputTextureCoordinate") ?: 0
                 inputImageTextureUniform = filterProgram?.uniformIndex("inputImageTexture") ?: 0
             }
-        }
+        })
     }
 
     override fun setInputSize(inputSize: Size?) {
@@ -98,12 +98,12 @@ open class Filter(
     }
 
     override fun release() {
-        runSynchronouslyGpu {
+        runSynchronouslyGpu(Runnable {
             outputFramebuffer?.let {
                 GLContext.sharedFramebufferCache()?.returnFramebuffer(it)
             }
             GLContext.deleteProgram(filterProgram)
-        }
+        })
     }
 
     open fun renderToTexture(vertices: FloatBuffer, textureCoordinates: FloatBuffer) {
@@ -189,24 +189,24 @@ open class Filter(
     }
 
     fun setFloat(floatValue: Float, uniform: Int, shaderProgram: GLProgram?) {
-        runAsynchronouslyGpu {
+        runAsynchronouslyGpu(Runnable {
             GLContext.setActiveShaderProgram(shaderProgram)
             setAndExecuteUniformStateCallbackAtIndex(uniform, object : Callback {
                 override fun function() {
                     GLES20.glUniform1f(uniform, floatValue)
                 }
             })
-        }
+        })
     }
 
     fun setUniformMatrix4f(matrix: FloatArray, uniform: Int, shaderProgram: GLProgram?) {
-        runAsynchronouslyGpu {
+        runAsynchronouslyGpu(Runnable {
             GLContext.setActiveShaderProgram(shaderProgram)
             setAndExecuteUniformStateCallbackAtIndex(uniform, object : Callback {
                 override fun function() {
                     GLES20.glUniformMatrix4fv(uniform, 1, false, matrix, 0)
                 }
             })
-        }
+        })
     }
 }

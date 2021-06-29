@@ -73,10 +73,10 @@ class BitmapImageView(context: Context, attrs: AttributeSet) :
         super.onDetachedFromWindow()
         if (inputFramebuffer?.onlyTexture == true) {
             if (fboId > 0) {
-                runAsynchronouslyGpu {
+                runAsynchronouslyGpu(Runnable {
                     GLES20.glDeleteFramebuffers(1, intArrayOf(fboId), 0)
                     fboId = 0
-                }
+                })
             }
         }
     }

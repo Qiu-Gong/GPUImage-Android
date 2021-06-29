@@ -216,7 +216,7 @@ class GLView : Input {
     }
 
     fun viewCreate(any: Any?) {
-        runSynchronouslyGpu {
+        runSynchronouslyGpu(Runnable {
             if (any is Surface) {
                 eglSurface =
                     WindowSurface(
@@ -226,26 +226,26 @@ class GLView : Input {
                 eglSurface = WindowSurface(GLContext.sharedProcessingContext()?.eglCore, any)
             }
             createProgram()
-        }
+        })
     }
 
     fun viewChange(width: Int, height: Int) {
-        runSynchronouslyGpu {
+        runSynchronouslyGpu(Runnable {
             currentViewSize = Size(width, height)
             recalculateView()
 
             // surfaceCreated surfaceChanged 完成后，才算创建完成
             callback?.onViewCreate()
-        }
+        })
     }
 
     fun viewDestroyed() {
-        runSynchronouslyGpu {
+        runSynchronouslyGpu(Runnable {
             GLContext.deleteProgram(displayProgram)
             eglSurface?.releaseEglSurface()
 
             // 销毁
             callback?.onViewDestroy()
-        }
+        })
     }
 }

@@ -27,10 +27,10 @@ class BrightnessFilter : Filter(fragmentShader = FRAGMENT_SHADER) {
     private var brightnessUniform: Int = 0
 
     init {
-        runSynchronouslyGpu {
+        runSynchronouslyGpu(Runnable {
             brightnessUniform = filterProgram?.uniformIndex("brightness") ?: 0
             brightness = 0.0f
-        }
+        })
     }
 
     /**

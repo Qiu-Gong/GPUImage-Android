@@ -7,7 +7,7 @@ import android.view.Surface
 import java.nio.ByteBuffer
 
 class EncoderMediaCodec(
-    private val callback: EncoderInfoCallback?,
+    private val callback: EncoderInfoCallback?
 ) : BaseMediaCodec() {
 
     companion object {

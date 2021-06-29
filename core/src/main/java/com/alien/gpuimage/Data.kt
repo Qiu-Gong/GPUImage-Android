@@ -96,7 +96,7 @@ val IMAGE_VERTICES = createFloatBuffer(
         -1.0f, -1.0f,
         1.0f, -1.0f,
         -1.0f, 1.0f,
-        1.0f, 1.0f,
+        1.0f, 1.0f
     )
 )
 

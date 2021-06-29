@@ -105,10 +105,10 @@ class GLContext(createContext: Boolean = false) {
     }
 
     fun release() {
-        runSynchronous {
+        runSynchronous(Runnable {
             framebufferCache?.release()
             shaderProgramCache.values.forEach { it.release() }
-        }
+        })
 
         eglSurface?.releaseEglSurface()
         eglCore?.release()
@@ -164,12 +164,12 @@ class GLContext(createContext: Boolean = false) {
      * 同步操作
      */
     fun runSynchronous(runnable: Runnable) {
-        runAsynchronously {
+        runAsynchronously(Runnable {
             synchronized(lock) {
                 runnable.run()
                 lock.notifyAll()
             }
-        }
+        })
         synchronized(lock) {
             lock.wait()
         }
@@ -183,7 +183,7 @@ class GLContext(createContext: Boolean = false) {
     }
 
     fun printUseMemory() {
-        runAsynchronously {
+        runAsynchronously(Runnable {
             Logger.d(TAG, "Fbo-> \n ${framebufferCache.toString()}")
 
             val stringBuilder = StringBuilder()
@@ -192,6 +192,6 @@ class GLContext(createContext: Boolean = false) {
                 stringBuilder.append(it.toString()).append("\n")
             }
             Logger.d(TAG, "Program-> \n $stringBuilder")
-        }
+        })
     }
 }

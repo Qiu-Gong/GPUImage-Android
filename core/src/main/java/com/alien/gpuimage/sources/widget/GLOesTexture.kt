@@ -47,7 +47,7 @@ class GLOesTexture : Output() {
     private var oesSize: Size = Size()
 
     fun createProgram() {
-        runSynchronously {
+        runSynchronously(Runnable {
             GLContext.useProcessingContext()
 
             // OES 纹理
@@ -94,7 +94,7 @@ class GLOesTexture : Output() {
             inputTextureCoordinateAttribute =
                 oesProgram?.attributeIndex("inputTextureCoordinate") ?: 0
             inputImageTextureUniform = oesProgram?.uniformIndex("inputImageTexture") ?: 0
-        }
+        })
     }
 
     fun setOesRotation(rotation: Int) {
@@ -124,11 +124,11 @@ class GLOesTexture : Output() {
     }
 
     fun onFrameAvailable(surfaceTexture: SurfaceTexture?, presentationTimeUs: Long) {
-        runSynchronously {
+        runSynchronously(Runnable {
             surfaceTexture?.updateTexImage()
             renderToTexture(IMAGE_VERTICES, textureCoordinatesForRotation(videoRotation, false))
             informTargetsAboutNewFrameAtTime(presentationTimeUs)
-        }
+        })
     }
 
     private fun renderToTexture(vertices: FloatBuffer, textureCoordinates: FloatBuffer) {
@@ -177,7 +177,7 @@ class GLOesTexture : Output() {
     }
 
     override fun release() {
-        runSynchronously {
+        runSynchronously(Runnable {
             if (oesTexture != -1) {
                 GLES20.glDeleteTextures(1, intArrayOf(oesTexture), 0)
                 oesTexture = -1
@@ -188,6 +188,6 @@ class GLOesTexture : Output() {
             }
 
             GLContext.deleteProgram(oesProgram)
-        }
+        })
     }
 }

@@ -87,10 +87,10 @@ class WatermarkFilter(bitmap: Bitmap) : Filter() {
 
     override fun release() {
         super.release()
-        runSynchronously {
+        runSynchronously(Runnable {
             picture?.release()
             picture = null
-        }
+        })
     }
 
     /**

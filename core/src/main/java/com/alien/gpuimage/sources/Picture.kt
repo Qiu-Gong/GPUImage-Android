@@ -34,33 +34,33 @@ class Picture : Output {
             GLContext(true)
         }
 
-        runSynchronously {
+        runSynchronously(Runnable {
             this.bitmap = bitmap
             loadImageToFBO()
             if (recycle) {
                 this.bitmap?.recycle()
             }
-        }
+        })
     }
 
     fun processPicture() {
-        runAsynchronously {
+        runAsynchronously(Runnable {
             targets.forEachIndexed { _, input ->
                 input.setInputSize(pixelSizeOfImage)
                 input.setInputFramebuffer(outputFramebuffer)
                 input.newFrameReadyAtTime(System.currentTimeMillis())
             }
-        }
+        })
     }
 
     fun processPictureSynchronously() {
-        runSynchronously {
+        runSynchronously(Runnable {
             targets.forEachIndexed { _, input ->
                 input.setInputSize(pixelSizeOfImage)
                 input.setInputFramebuffer(outputFramebuffer)
                 input.newFrameReadyAtTime(System.currentTimeMillis())
             }
-        }
+        })
     }
 
     private fun loadImageToFBO() {
