@@ -28,9 +28,6 @@ public class MediaMuxerEncodedFrameQueue extends AbsEncodedFrameQueue<MediaMuxer
     protected void doWriteSampleData(MediaMuxer outputStream, ByteBuffer byteBuffer, MediaCodec.BufferInfo byteInfo) {
 
         try {
-            Log.d("QIUGONG",
-                    "onDataAvailable bufferInfo: flags=" + byteInfo.flags + " time=" + byteInfo.presentationTimeUs + " size=" + byteInfo.size + " offset="+byteInfo.offset
-            );
             outputStream.writeSampleData(mTrackIndex, byteBuffer, byteInfo);
 
         } catch (IllegalStateException e) {

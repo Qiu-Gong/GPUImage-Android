@@ -105,6 +105,8 @@ class Framebuffer(
     fun activate() {
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, framebufferId)
         GLES20.glViewport(0, 0, width, height)
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
+        GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0)
     }
 
     fun lock() {

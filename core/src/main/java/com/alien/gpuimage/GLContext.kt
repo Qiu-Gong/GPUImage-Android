@@ -154,7 +154,10 @@ class GLContext(createContext: Boolean = false) {
 
     private fun setContextShaderProgram(program: GLProgram?) {
         useAsCurrentContext()
-        if (currentShaderProgram != program) {
+        val currentProgram = intArray {
+            GLES20.glGetIntegerv(GLES20.GL_CURRENT_PROGRAM, it, 0)
+        }
+        if (currentShaderProgram != program || (currentShaderProgram?.program != currentProgram)) {
             currentShaderProgram = program
             currentShaderProgram?.use()
         }

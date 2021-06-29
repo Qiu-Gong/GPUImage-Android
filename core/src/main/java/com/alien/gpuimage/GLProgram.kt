@@ -10,7 +10,8 @@ class GLProgram() {
         private const val TAG = "GLProgram"
     }
 
-    private var program: Int = 0
+    var program: Int = 0
+        private set
     private var vertShader: Int = 0
     private var fragShader: Int = 0
 
