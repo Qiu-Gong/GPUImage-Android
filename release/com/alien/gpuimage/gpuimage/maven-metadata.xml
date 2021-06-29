@@ -3,7 +3,7 @@
   <groupId>com.alien.gpuimage</groupId>
   <artifactId>gpuimage</artifactId>
   <versioning>
-    <release>1.0.0-07</release>
+    <release>1.0.0-08</release>
     <versions>
       <version>1.0.0-01</version>
       <version>1.0.0-02</version>
@@ -12,7 +12,8 @@
       <version>1.0.0-05</version>
       <version>1.0.0-06</version>
       <version>1.0.0-07</version>
+      <version>1.0.0-08</version>
     </versions>
-    <lastUpdated>20210629023822</lastUpdated>
+    <lastUpdated>20210629025933</lastUpdated>
   </versioning>
 </metadata>

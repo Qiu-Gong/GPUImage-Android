@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
 
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -34,15 +34,15 @@ android {
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "androidx.core:core-ktx:1.5.0"
-    implementation "androidx.appcompat:appcompat:1.3.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
+    implementation "androidx.core:core-ktx:$corektx"
+    implementation "androidx.appcompat:appcompat:$appcompat"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayout"
 }
 
 // 打包
 project.ext {
     mavenGroupId = "com.alien.gpuimage"
     mavenArtifactId = "gpuimage"
-    mavenVersion = "1.0.0-07"
+    mavenVersion = "1.0.0-08"
 }
 apply from: file("../maven.gradle")
