@@ -3,6 +3,7 @@ package com.alien.gpuimage
 import android.opengl.GLES20
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.Looper
 import com.alien.gpuimage.egl.EglCore
 import com.alien.gpuimage.egl.EglSurfaceBase
 import com.alien.gpuimage.egl.OffscreenSurface
@@ -120,6 +121,10 @@ class GLContext(createContext: Boolean = false) {
 
     fun isCurrentThread(): Boolean {
         return Thread.currentThread().name.equals(thread?.name)
+    }
+
+    fun getCurrentLoop(): Looper? {
+        return thread?.looper
     }
 
     private fun isCurrentContext(): Boolean {
