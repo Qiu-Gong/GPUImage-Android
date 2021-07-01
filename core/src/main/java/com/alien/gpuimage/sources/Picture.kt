@@ -9,6 +9,9 @@ import com.alien.gpuimage.Size
 import com.alien.gpuimage.outputs.Output
 import com.alien.gpuimage.utils.Logger
 
+/**
+ * Bitmap 输入
+ */
 class Picture : Output {
 
     companion object {

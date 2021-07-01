@@ -1,18 +1,24 @@
 package com.alien.gpuimage
 
+import android.opengl.GLES11Ext.GL_BGRA
 import android.opengl.GLES20
 import com.alien.gpuimage.utils.Logger
 
-class Framebuffer(
-    var width: Int,
-    var height: Int,
-    var textureAttributes: TextureAttributes,
-    var onlyTexture: Boolean = false
-) {
+
+class Framebuffer {
 
     companion object {
         private const val TAG = "Framebuffer"
     }
+
+    var width: Int
+        private set
+    var height: Int
+        private set
+    var textureAttributes: TextureAttributes
+        private set
+    var onlyTexture: Boolean
+        private set
 
     var textureId: Int = -1
         private set
@@ -22,16 +28,44 @@ class Framebuffer(
     private var framebufferReferenceCount: Int = 0
     private var referenceCountingDisabled: Boolean = false
 
-    init {
-        framebufferReferenceCount = 0
-        referenceCountingDisabled = false
+    constructor(
+        width: Int, height: Int,
+        textureAttributes: TextureAttributes,
+        onlyTexture: Boolean = false
+    ) {
+        this.width = width
+        this.height = height
+        this.textureAttributes = textureAttributes
+        this.onlyTexture = onlyTexture
+        this.framebufferReferenceCount = 0
+        this.referenceCountingDisabled = false
 
-        if (onlyTexture) {
+        if (this.onlyTexture) {
             generateTexture()
-            framebufferId = 0
+            this.framebufferId = 0
         } else {
             generateFramebuffer()
         }
+    }
+
+    constructor(width: Int, height: Int, inputTexture: Int) {
+        val defaultTextureOptions = TextureAttributes()
+        defaultTextureOptions.minFilter = GLES20.GL_LINEAR
+        defaultTextureOptions.magFilter = GLES20.GL_LINEAR
+        defaultTextureOptions.wrapS = GLES20.GL_CLAMP_TO_EDGE
+        defaultTextureOptions.wrapT = GLES20.GL_CLAMP_TO_EDGE
+        defaultTextureOptions.internalFormat = GLES20.GL_RGBA
+        defaultTextureOptions.format = GL_BGRA
+        defaultTextureOptions.type = GLES20.GL_UNSIGNED_BYTE
+
+        this.textureAttributes = defaultTextureOptions
+        this.width = width
+        this.height = height
+        this.onlyTexture = true
+        this.framebufferReferenceCount = 0
+        this.referenceCountingDisabled = true
+
+        this.textureId = inputTexture
     }
 
     private fun generateFramebuffer() {
