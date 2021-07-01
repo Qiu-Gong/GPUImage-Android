@@ -28,7 +28,7 @@ class BitmapImageView(context: Context, attrs: AttributeSet) :
     private var inBuffer: ByteBuffer? = null
     private var inBitmap: Bitmap? = null
 
-    override fun setInputSize(inputSize: Size?) = Unit
+    override fun setInputSize(inputSize: Size?, textureIndex: Int) = Unit
 
     override fun setInputFramebuffer(framebuffer: Framebuffer?) {
         inputFramebuffer = framebuffer

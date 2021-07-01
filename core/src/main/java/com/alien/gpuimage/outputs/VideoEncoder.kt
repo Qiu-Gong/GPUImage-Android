@@ -45,8 +45,8 @@ class VideoEncoder(
         muxer = MediaMuxerImpl(outPath)
     }
 
-    override fun setInputSize(inputSize: Size?) {
-        glView.setInputSize(inputSize)
+    override fun setInputSize(inputSize: Size?, textureIndex: Int) {
+        glView.setInputSize(inputSize, textureIndex)
     }
 
     override fun setInputFramebuffer(framebuffer: Framebuffer?) {

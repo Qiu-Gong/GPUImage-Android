@@ -40,8 +40,8 @@ open class SurfaceView(context: Context, attrs: AttributeSet) :
         }
     }
 
-    override fun setInputSize(inputSize: Size?) {
-        glView.setInputSize(inputSize)
+    override fun setInputSize(inputSize: Size?, textureIndex: Int) {
+        glView.setInputSize(inputSize, textureIndex)
     }
 
     override fun setInputFramebuffer(framebuffer: Framebuffer?) {

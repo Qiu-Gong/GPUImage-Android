@@ -169,7 +169,7 @@ class GLOesTexture : Output() {
     private fun informTargetsAboutNewFrameAtTime(time: Long) {
         targets.forEachIndexed { _, input ->
             input.setInputRotation(videoRotation)
-            input.setInputSize(oesSize)
+            input.setInputSize(oesSize, 0)
             input.setInputFramebuffer(outputFramebuffer)
             input.newFrameReadyAtTime(time)
         }

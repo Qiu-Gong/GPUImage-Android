@@ -49,7 +49,7 @@ class Picture : Output {
     fun processPicture() {
         runAsynchronously(Runnable {
             targets.forEachIndexed { _, input ->
-                input.setInputSize(pixelSizeOfImage)
+                input.setInputSize(pixelSizeOfImage, 0)
                 input.setInputFramebuffer(outputFramebuffer)
                 input.newFrameReadyAtTime(System.currentTimeMillis())
             }
@@ -59,7 +59,7 @@ class Picture : Output {
     fun processPictureSynchronously() {
         runSynchronously(Runnable {
             targets.forEachIndexed { _, input ->
-                input.setInputSize(pixelSizeOfImage)
+                input.setInputSize(pixelSizeOfImage, 0)
                 input.setInputFramebuffer(outputFramebuffer)
                 input.newFrameReadyAtTime(System.currentTimeMillis())
             }

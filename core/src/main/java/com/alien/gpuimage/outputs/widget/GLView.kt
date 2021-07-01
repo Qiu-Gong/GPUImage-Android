@@ -135,7 +135,7 @@ class GLView : Input {
         }
     }
 
-    override fun setInputSize(inputSize: Size?) {
+    override fun setInputSize(inputSize: Size?, textureIndex: Int) {
         if ((inputRotation) == RotationMode.RotateLeft
             || (inputRotation) == RotationMode.RotateRight
             || (inputRotation) == RotationMode.RotateRightFlipVertical

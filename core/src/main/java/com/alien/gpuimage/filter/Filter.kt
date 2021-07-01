@@ -50,15 +50,14 @@ open class Filter(
     private var inputFramebuffer: Framebuffer? = null
     private var inputSize: Size? = null
 
-    private val backgroundColor: BackgroundColor = BackgroundColor()
+    protected val backgroundColor: BackgroundColor = BackgroundColor()
     private val uniformStateRestoration = HashMap<Int, Callback>()
 
     init {
         this.runSynchronouslyGpu(Runnable {
             if (!TextUtils.isEmpty(vertexShader) && !TextUtils.isEmpty(fragmentShader)) {
                 filterProgram = GLContext.program(vertexShader!!, fragmentShader!!)
-                filterProgram?.addAttribute("position")
-                filterProgram?.addAttribute("inputTextureCoordinate")
+                initializeAttributes()
 
                 if (filterProgram?.link() == false) {
                     Logger.e(TAG, "Program link log: ${filterProgram?.programLog}")
@@ -79,7 +78,7 @@ open class Filter(
         })
     }
 
-    override fun setInputSize(inputSize: Size?) {
+    override fun setInputSize(inputSize: Size?, textureIndex: Int) {
         this.inputSize = inputSize
     }
 
@@ -152,10 +151,15 @@ open class Filter(
         inputFramebuffer?.unlock()
     }
 
+    open fun initializeAttributes(){
+        filterProgram?.addAttribute("position")
+        filterProgram?.addAttribute("inputTextureCoordinate")
+    }
+
     open fun informTargetsAboutNewFrameAtTime(time: Long) {
         targets.forEachIndexed { _, input ->
             input.setInputRotation(inputRotation)
-            input.setInputSize(inputSize)
+            input.setInputSize(inputSize, 0)
             input.setInputFramebuffer(outputFramebuffer)
             input.newFrameReadyAtTime(time)
         }
@@ -170,7 +174,7 @@ open class Filter(
         callback.function()
     }
 
-    private fun setUniformsForProgram() {
+    fun setUniformsForProgram() {
         uniformStateRestoration.values.forEach {
             it.function()
         }
