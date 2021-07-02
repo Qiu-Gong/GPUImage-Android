@@ -122,7 +122,7 @@ class TwoInputFilter(
         secondInputFramebuffer?.unlock()
     }
 
-    fun nextAvailableTextureIndex(): Int {
+    override fun nextAvailableTextureIndex(): Int {
         return if (hasSetFirstTexture) 1 else 0
     }
 

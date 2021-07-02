@@ -93,7 +93,7 @@ class VideoDecoder(path: String, private val handler: Handler) : Output() {
         decoder?.start()
     }
 
-    override fun addTarget(input: Input?) {
+    override fun addTarget(input: Input?, textureLocation: Int) {
         glOesTexture.addTarget(input)
     }
 

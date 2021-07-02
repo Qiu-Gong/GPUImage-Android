@@ -4,18 +4,30 @@ import com.alien.gpuimage.Framebuffer
 import com.alien.gpuimage.GLContext
 import com.alien.gpuimage.TextureAttributes
 import com.alien.gpuimage.sources.Input
+import com.alien.gpuimage.utils.Logger
 
 abstract class Output {
 
+    companion object {
+        private const val TAG = "Output"
+    }
+
     protected val targets: MutableList<Input> = mutableListOf()
+    protected val targetTextureIndices: MutableList<Int> = mutableListOf()
     var outputFramebuffer: Framebuffer? = null
     protected var outputTextureOptions: TextureAttributes = TextureAttributes()
 
     abstract fun release()
 
-    open fun addTarget(input: Input?) {
+    open fun addTarget(input: Input?, textureLocation: Int = 0) {
+        if (targets.contains(input)) {
+            Logger.e(TAG, "add repeatedly targets.")
+            return
+        }
+
         input?.let {
             targets.add(input)
+            targetTextureIndices.add(textureLocation)
         }
     }
 

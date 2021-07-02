@@ -15,6 +15,8 @@ interface Input {
 
     fun newFrameReadyAtTime(time: Long)
 
+    fun nextAvailableTextureIndex(): Int = 0
+
     /**
      * 同步运行在 GL 线程
      */

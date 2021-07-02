@@ -20,8 +20,8 @@ class TextureInput : Output() {
 
     fun processTextureWithFrameTime(frameTime: Long) {
         runAsynchronously(Runnable {
-            targets.forEachIndexed { _, input ->
-                input.setInputSize(textureSize, 0)
+            targets.forEachIndexed { index, input ->
+                input.setInputSize(textureSize, targetTextureIndices.indexOf(index))
                 input.setInputFramebuffer(outputFramebuffer)
                 input.newFrameReadyAtTime(frameTime)
             }

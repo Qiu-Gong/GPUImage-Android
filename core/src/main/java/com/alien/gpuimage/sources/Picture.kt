@@ -48,8 +48,8 @@ class Picture : Output {
 
     fun processPicture() {
         runAsynchronously(Runnable {
-            targets.forEachIndexed { _, input ->
-                input.setInputSize(pixelSizeOfImage, 0)
+            targets.forEachIndexed { index, input ->
+                input.setInputSize(pixelSizeOfImage, targetTextureIndices.indexOf(index))
                 input.setInputFramebuffer(outputFramebuffer)
                 input.newFrameReadyAtTime(System.currentTimeMillis())
             }
@@ -58,8 +58,8 @@ class Picture : Output {
 
     fun processPictureSynchronously() {
         runSynchronously(Runnable {
-            targets.forEachIndexed { _, input ->
-                input.setInputSize(pixelSizeOfImage, 0)
+            targets.forEachIndexed { index, input ->
+                input.setInputSize(pixelSizeOfImage, targetTextureIndices.indexOf(index))
                 input.setInputFramebuffer(outputFramebuffer)
                 input.newFrameReadyAtTime(System.currentTimeMillis())
             }
