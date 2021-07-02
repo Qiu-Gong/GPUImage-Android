@@ -82,7 +82,6 @@ class GLContext(createContext: Boolean = false) {
         private set
     private var eglSurface: EglSurfaceBase? = null
     private var thread: HandlerThread? = null
-    private val lock: Object = Object()
     private var handler: Handler? = null
 
     private var framebufferCache: FramebufferCache? = null
@@ -172,15 +171,26 @@ class GLContext(createContext: Boolean = false) {
      * 同步操作
      */
     fun runSynchronous(runnable: Runnable) {
-        runAsynchronously(Runnable {
-            synchronized(lock) {
-                runnable.run()
-                lock.notifyAll()
+        runAsynchronously(runnable)
+        waitDone()
+    }
+
+    private fun waitDone(): Boolean {
+        val waitDoneLock = Object()
+        val unlockRunnable = Runnable {
+            synchronized(waitDoneLock) {
+                waitDoneLock.notifyAll()
             }
-        })
-        synchronized(lock) {
-            lock.wait()
         }
+        synchronized(waitDoneLock) {
+            this.handler?.post(unlockRunnable)
+            try {
+                waitDoneLock.wait()
+            } catch (ex: InterruptedException) {
+                return false
+            }
+        }
+        return true
     }
 
     /**
