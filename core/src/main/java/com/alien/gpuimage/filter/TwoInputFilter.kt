@@ -4,7 +4,7 @@ import android.opengl.GLES20
 import com.alien.gpuimage.*
 import java.nio.FloatBuffer
 
-class TwoInputFilter(
+open class TwoInputFilter(
     vertexShader: String? = SHADER_STRING,
     fragmentShader: String?
 ) : Filter(vertexShader, fragmentShader) {
@@ -48,7 +48,6 @@ class TwoInputFilter(
                 filterProgram?.attributeIndex("inputTextureCoordinate2") ?: 0
             filterInputTextureUniform2 =
                 filterProgram?.uniformIndex("inputImageTexture2") ?: 0
-            GLES20.glEnableVertexAttribArray(filterSecondTextureCoordinateAttribute)
         })
     }
 
@@ -59,7 +58,7 @@ class TwoInputFilter(
 
 
     fun disableFirstFrameCheck() {
-        firstFrameCheckDisabled = false
+        firstFrameCheckDisabled = true
     }
 
     fun disableSecondFrameCheck() {
@@ -128,7 +127,7 @@ class TwoInputFilter(
 
     override fun setInputFramebuffer(framebuffer: Framebuffer?, textureIndex: Int) {
         if (textureIndex == 0) {
-            super.setInputFramebuffer(framebuffer, textureIndex)
+            super.setInputFramebuffer(framebuffer, 0)
             hasSetFirstTexture = true
             getInputFramebuffer()?.lock()
         } else {
@@ -141,6 +140,70 @@ class TwoInputFilter(
         super.setInputSize(inputSize, textureIndex)
         if (inputSize?.width == 0 || inputSize?.height == 0) {
             hasSetFirstTexture = false
+        }
+    }
+
+    override fun setInputRotation(rotation: RotationMode, textureIndex: Int) {
+        if (textureIndex == 0) {
+            super.setInputRotation(rotation, 0)
+        } else {
+            inputRotation2 = rotation
+        }
+    }
+
+    override fun rotatedSize(sizeToRotate: Size, textureIndex: Int): Size {
+        val rotatedSize = Size(sizeToRotate.width, sizeToRotate.height)
+        val rotationToCheck = if (textureIndex == 0) {
+            getInputRotation()
+        } else {
+            inputRotation2
+        }
+
+        if (rotationSwapsWidthAndHeight(rotationToCheck)) {
+            rotatedSize.width = sizeToRotate.height
+            rotatedSize.height = sizeToRotate.width
+        }
+
+        return rotatedSize
+    }
+
+    override fun newFrameReadyAtTime(frameTime: Long, textureIndex: Int) {
+        if (hasReceivedFirstFrame && hasReceivedSecondFrame) {
+            return
+        }
+
+        var updatedMovieFrameOppositeStillImage = false
+        if (textureIndex == 0) {
+            hasReceivedFirstFrame = true
+            firstFrameTime = frameTime
+            if (secondFrameCheckDisabled) {
+                hasReceivedSecondFrame = true
+            }
+
+            if (frameTime != 0L) {
+                if (secondFrameTime == 0L) {
+                    updatedMovieFrameOppositeStillImage = true
+                }
+            }
+        } else {
+            hasReceivedSecondFrame = true
+            secondFrameTime = frameTime
+            if (firstFrameCheckDisabled) {
+                hasReceivedFirstFrame = true
+            }
+
+            if (frameTime != 0L) {
+                if (firstFrameTime == 0L) {
+                    updatedMovieFrameOppositeStillImage = true
+                }
+            }
+        }
+
+        if ((hasReceivedFirstFrame && hasReceivedSecondFrame) || updatedMovieFrameOppositeStillImage) {
+            val passOnFrameTime = if (firstFrameTime != 0L) firstFrameTime else secondFrameTime
+            super.newFrameReadyAtTime(passOnFrameTime, textureIndex)
+            hasReceivedFirstFrame = false
+            hasReceivedSecondFrame = false
         }
     }
 }

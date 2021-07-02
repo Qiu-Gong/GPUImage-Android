@@ -162,4 +162,12 @@ fun textureCoordinatesForRotation(
         }
     }
 }
+
+fun rotationSwapsWidthAndHeight(rotation: RotationMode): Boolean {
+    return (rotation == RotationMode.RotateLeft
+            || rotation == RotationMode.RotateRight
+            || rotation == RotationMode.RotateRightFlipVertical
+            || rotation == RotationMode.RotateRightFlipHorizontal)
+}
+
 /// endregion

@@ -167,6 +167,15 @@ open class Filter(
         outputFramebuffer?.unlock()
     }
 
+    open fun rotatedSize(sizeToRotate: Size, textureIndex: Int): Size {
+        val rotatedSize = Size(sizeToRotate.width, sizeToRotate.height)
+        if (rotationSwapsWidthAndHeight(inputRotation)) {
+            rotatedSize.width = sizeToRotate.height
+            rotatedSize.height = sizeToRotate.width
+        }
+        return rotatedSize
+    }
+
     private fun setAndExecuteUniformStateCallbackAtIndex(
         uniform: Int,
         callback: Callback
