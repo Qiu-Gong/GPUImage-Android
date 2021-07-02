@@ -168,7 +168,7 @@ class GLOesTexture : Output() {
 
     private fun informTargetsAboutNewFrameAtTime(time: Long) {
         targets.forEachIndexed { index, input ->
-            val textureIndices = targetTextureIndices.indexOf(index)
+            val textureIndices = targetTextureIndices[index]
             input.setInputRotation(videoRotation, textureIndices)
             input.setInputSize(oesSize, textureIndices)
             input.setInputFramebuffer(outputFramebuffer, textureIndices)

@@ -19,13 +19,25 @@ abstract class Output {
 
     abstract fun release()
 
-    open fun addTarget(input: Input?, textureLocation: Int = 0) {
+    private fun setInputFramebufferForTarget(input: Input?, inputTextureIndex: Int) {
+        if (outputFramebuffer != null) {
+            input?.setInputFramebuffer(outputFramebuffer, inputTextureIndex)
+        }
+    }
+
+    open fun addTarget(input: Input?) {
+        val index = input?.nextAvailableTextureIndex() ?: 0
+        addTarget(input, index)
+    }
+
+    open fun addTarget(input: Input?, textureLocation: Int) {
         if (targets.contains(input)) {
             Logger.e(TAG, "add repeatedly targets.")
             return
         }
 
         input?.let {
+            setInputFramebufferForTarget(it, textureLocation)
             targets.add(input)
             targetTextureIndices.add(textureLocation)
         }

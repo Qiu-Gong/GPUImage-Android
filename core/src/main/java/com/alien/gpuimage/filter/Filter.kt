@@ -158,7 +158,7 @@ open class Filter(
 
     open fun informTargetsAboutNewFrameAtTime(time: Long) {
         targets.forEachIndexed { index, input ->
-            val textureIndices = targetTextureIndices.indexOf(index)
+            val textureIndices = targetTextureIndices[index]
             input.setInputRotation(inputRotation, textureIndices)
             input.setInputSize(inputSize, textureIndices)
             input.setInputFramebuffer(outputFramebuffer, textureIndices)

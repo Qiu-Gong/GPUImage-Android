@@ -89,7 +89,7 @@ open class TwoInputFilter(
         // 激活纹理 3
         GLES20.glActiveTexture(GLES20.GL_TEXTURE3)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, secondInputFramebuffer?.textureId ?: 0)
-        GLES20.glUniform1i(inputImageTextureUniform, 3)
+        GLES20.glUniform1i(filterInputTextureUniform2, 3)
 
         // GL坐标
         GLES20.glEnableVertexAttribArray(positionAttribute)
@@ -103,8 +103,7 @@ open class TwoInputFilter(
         // 纹理坐标2
         GLES20.glEnableVertexAttribArray(filterSecondTextureCoordinateAttribute)
         GLES20.glVertexAttribPointer(
-            filterSecondTextureCoordinateAttribute,
-            2, GLES20.GL_FLOAT, false, 0,
+            filterSecondTextureCoordinateAttribute, 2, GLES20.GL_FLOAT, false, 0,
             textureCoordinatesForRotation(inputRotation2, false)
         )
 
@@ -201,7 +200,7 @@ open class TwoInputFilter(
 
         if ((hasReceivedFirstFrame && hasReceivedSecondFrame) || updatedMovieFrameOppositeStillImage) {
             val passOnFrameTime = if (firstFrameTime != 0L) firstFrameTime else secondFrameTime
-            super.newFrameReadyAtTime(passOnFrameTime, textureIndex)
+            super.newFrameReadyAtTime(passOnFrameTime, 0)
             hasReceivedFirstFrame = false
             hasReceivedSecondFrame = false
         }

@@ -26,6 +26,7 @@
         <activity android:name=".TextureViewActivity" />
         <activity android:name=".VideoActivity" />
         <activity android:name=".TransformActivity" />
+        <activity android:name=".TwoInputActivity" />
     </application>
 
 </manifest>

@@ -48,6 +48,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.transform_view).setOnClickListener {
             clickListener(it.id)
         }
+
+        findViewById<View>(R.id.two_input).setOnClickListener {
+            clickListener(it.id)
+        }
     }
 
     private fun clickListener(id: Int) {
@@ -117,6 +121,8 @@ class MainActivity : AppCompatActivity() {
                     VideoActivity.startActivity(this, path)
                 } else if (type == R.id.transform_view) {
                     TransformActivity.startActivity(this, path)
+                } else if (type == R.id.two_input) {
+                    TwoInputActivity.startActivity(this, path)
                 }
             }
         }

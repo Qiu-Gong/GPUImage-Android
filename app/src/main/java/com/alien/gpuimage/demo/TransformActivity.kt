@@ -66,4 +66,10 @@ class TransformActivity : AppCompatActivity() {
         })
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        picture?.release()
+        transformFilter?.release()
+    }
 }
