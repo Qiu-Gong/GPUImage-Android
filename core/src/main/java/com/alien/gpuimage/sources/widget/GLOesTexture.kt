@@ -44,6 +44,7 @@ class GLOesTexture : Output() {
     private var inputImageTextureUniform: Int = 0
 
     private var videoRotation: RotationMode = RotationMode.NoRotation
+    private var outputRotation: RotationMode = RotationMode.NoRotation
     private var oesSize: Size = Size()
 
     fun createProgram() {
@@ -103,15 +104,19 @@ class GLOesTexture : Output() {
                 videoRotation = RotationMode.NoRotation
             }
             270 -> {
-                videoRotation = RotationMode.RotateRight
+                videoRotation = RotationMode.RotateLeft
             }
             90 -> {
-                videoRotation = RotationMode.RotateLeft
+                videoRotation = RotationMode.RotateRight
             }
             180 -> {
                 videoRotation = RotationMode.Rotate180
             }
         }
+    }
+
+    fun setOutputRotation(rotationMode: RotationMode) {
+        this.outputRotation = rotationMode
     }
 
     fun setOesSize(width: Int, height: Int) {
@@ -169,7 +174,7 @@ class GLOesTexture : Output() {
     private fun informTargetsAboutNewFrameAtTime(time: Long) {
         targets.forEachIndexed { index, input ->
             val textureIndices = targetTextureIndices[index]
-            input.setInputRotation(videoRotation, textureIndices)
+            input.setInputRotation(outputRotation, textureIndices)
             input.setInputSize(oesSize, textureIndices)
             input.setInputFramebuffer(outputFramebuffer, textureIndices)
             input.newFrameReadyAtTime(time, textureIndices)
