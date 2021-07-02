@@ -136,9 +136,11 @@ open class TwoInputFilter(
     }
 
     override fun setInputSize(inputSize: Size?, textureIndex: Int) {
-        super.setInputSize(inputSize, textureIndex)
-        if (inputSize?.width == 0 || inputSize?.height == 0) {
-            hasSetFirstTexture = false
+        if (textureIndex == 0) {
+            super.setInputSize(inputSize, textureIndex)
+            if (inputSize?.width == 0 || inputSize?.height == 0) {
+                hasSetFirstTexture = false
+            }
         }
     }
 

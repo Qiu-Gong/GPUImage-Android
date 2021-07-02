@@ -36,8 +36,7 @@ class TwoInputActivity : AppCompatActivity() {
         val path = intent.getStringExtra(KEY_PATH)
         if (!File(path ?: "").exists()) return
 
-        val option = BitmapFactory.Options().apply { this.inSampleSize = 2 }
-        val bitmap = BitmapFactory.decodeFile(path, option)
+        val bitmap = BitmapFactory.decodeFile(path)
         val watermark = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher_round)
 
         picture1 = Picture(bitmap, true)
