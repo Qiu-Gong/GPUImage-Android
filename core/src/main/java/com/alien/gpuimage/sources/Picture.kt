@@ -49,9 +49,10 @@ class Picture : Output {
     fun processPicture() {
         runAsynchronously(Runnable {
             targets.forEachIndexed { index, input ->
-                input.setInputSize(pixelSizeOfImage, targetTextureIndices.indexOf(index))
-                input.setInputFramebuffer(outputFramebuffer)
-                input.newFrameReadyAtTime(System.currentTimeMillis())
+                val textureIndices = targetTextureIndices.indexOf(index)
+                input.setInputSize(pixelSizeOfImage, textureIndices)
+                input.setInputFramebuffer(outputFramebuffer, textureIndices)
+                input.newFrameReadyAtTime(System.currentTimeMillis(), textureIndices)
             }
         })
     }
@@ -59,9 +60,10 @@ class Picture : Output {
     fun processPictureSynchronously() {
         runSynchronously(Runnable {
             targets.forEachIndexed { index, input ->
-                input.setInputSize(pixelSizeOfImage, targetTextureIndices.indexOf(index))
-                input.setInputFramebuffer(outputFramebuffer)
-                input.newFrameReadyAtTime(System.currentTimeMillis())
+                val textureIndices = targetTextureIndices.indexOf(index)
+                input.setInputSize(pixelSizeOfImage, textureIndices)
+                input.setInputFramebuffer(outputFramebuffer, textureIndices)
+                input.newFrameReadyAtTime(System.currentTimeMillis(), textureIndices)
             }
         })
     }

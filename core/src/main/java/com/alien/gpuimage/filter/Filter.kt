@@ -82,16 +82,16 @@ open class Filter(
         this.inputSize = inputSize
     }
 
-    override fun setInputFramebuffer(framebuffer: Framebuffer?) {
+    override fun setInputFramebuffer(framebuffer: Framebuffer?, textureIndex: Int) {
         inputFramebuffer = framebuffer
         inputFramebuffer?.lock()
     }
 
-    override fun setInputRotation(rotation: RotationMode) {
+    override fun setInputRotation(rotation: RotationMode, textureIndex: Int) {
         inputRotation = rotation
     }
 
-    override fun newFrameReadyAtTime(time: Long) {
+    override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
         renderToTexture(IMAGE_VERTICES, textureCoordinatesForRotation(inputRotation, false))
         informTargetsAboutNewFrameAtTime(time)
     }
@@ -151,17 +151,18 @@ open class Filter(
         inputFramebuffer?.unlock()
     }
 
-    open fun initializeAttributes(){
+    open fun initializeAttributes() {
         filterProgram?.addAttribute("position")
         filterProgram?.addAttribute("inputTextureCoordinate")
     }
 
     open fun informTargetsAboutNewFrameAtTime(time: Long) {
-        targets.forEachIndexed { _, input ->
-            input.setInputRotation(inputRotation)
-            input.setInputSize(inputSize, 0)
-            input.setInputFramebuffer(outputFramebuffer)
-            input.newFrameReadyAtTime(time)
+        targets.forEachIndexed { index, input ->
+            val textureIndices = targetTextureIndices.indexOf(index)
+            input.setInputRotation(inputRotation, textureIndices)
+            input.setInputSize(inputSize, textureIndices)
+            input.setInputFramebuffer(outputFramebuffer, textureIndices)
+            input.newFrameReadyAtTime(time, textureIndices)
         }
         outputFramebuffer?.unlock()
     }

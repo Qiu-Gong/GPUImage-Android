@@ -27,16 +27,16 @@ class TextureView(context: Context, attrs: AttributeSet) :
         glView.setInputSize(inputSize, textureIndex)
     }
 
-    override fun setInputFramebuffer(framebuffer: Framebuffer?) {
-        glView.setInputFramebuffer(framebuffer)
+    override fun setInputFramebuffer(framebuffer: Framebuffer?, textureIndex: Int) {
+        glView.setInputFramebuffer(framebuffer, textureIndex)
     }
 
-    override fun setInputRotation(inputRotation: RotationMode) {
-        glView.setInputRotation(inputRotation)
+    override fun setInputRotation(inputRotation: RotationMode, textureIndex: Int) {
+        glView.setInputRotation(inputRotation, textureIndex)
     }
 
-    override fun newFrameReadyAtTime(time: Long) {
-        glView.newFrameReadyAtTime(time)
+    override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
+        glView.newFrameReadyAtTime(time, textureIndex)
     }
 
     private inner class SurfaceTextureCallbackImpl : SurfaceTextureListener {

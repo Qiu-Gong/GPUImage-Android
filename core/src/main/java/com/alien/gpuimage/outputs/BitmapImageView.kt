@@ -30,14 +30,14 @@ class BitmapImageView(context: Context, attrs: AttributeSet) :
 
     override fun setInputSize(inputSize: Size?, textureIndex: Int) = Unit
 
-    override fun setInputFramebuffer(framebuffer: Framebuffer?) {
+    override fun setInputFramebuffer(framebuffer: Framebuffer?, textureIndex: Int) {
         inputFramebuffer = framebuffer
         inputFramebuffer?.lock()
     }
 
-    override fun setInputRotation(inputRotation: RotationMode) = Unit
+    override fun setInputRotation(inputRotation: RotationMode, textureIndex: Int) = Unit
 
-    override fun newFrameReadyAtTime(time: Long) {
+    override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
         inputFramebuffer?.let { framebuffer ->
             if (!framebuffer.onlyTexture) {
                 fboId = framebuffer.framebufferId

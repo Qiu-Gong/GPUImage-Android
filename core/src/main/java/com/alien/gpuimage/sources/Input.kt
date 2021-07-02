@@ -9,11 +9,11 @@ interface Input {
 
     fun setInputSize(inputSize: Size?, textureIndex: Int)
 
-    fun setInputFramebuffer(framebuffer: Framebuffer?)
+    fun setInputFramebuffer(framebuffer: Framebuffer?, textureIndex: Int)
 
-    fun setInputRotation(inputRotation: RotationMode)
+    fun setInputRotation(inputRotation: RotationMode, textureIndex: Int)
 
-    fun newFrameReadyAtTime(time: Long)
+    fun newFrameReadyAtTime(time: Long, textureIndex: Int)
 
     fun nextAvailableTextureIndex(): Int = 0
 

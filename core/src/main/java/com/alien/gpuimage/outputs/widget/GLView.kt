@@ -151,16 +151,16 @@ class GLView : Input {
         }
     }
 
-    override fun setInputFramebuffer(framebuffer: Framebuffer?) {
+    override fun setInputFramebuffer(framebuffer: Framebuffer?, textureIndex: Int) {
         inputFramebuffer = framebuffer
         inputFramebuffer?.lock()
     }
 
-    override fun setInputRotation(inputRotation: RotationMode) {
+    override fun setInputRotation(inputRotation: RotationMode, textureIndex: Int) {
         this.inputRotation = inputRotation
     }
 
-    override fun newFrameReadyAtTime(time: Long) {
+    override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
         if (eglSurface == null) {
             inputFramebuffer?.unlock()
             inputFramebuffer = null

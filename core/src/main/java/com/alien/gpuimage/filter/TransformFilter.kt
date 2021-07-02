@@ -79,7 +79,7 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
         })
     }
 
-    override fun newFrameReadyAtTime(time: Long) {
+    override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
         if (ignoreAspectRatio) {
             if (anchorTopLeft) {
                 renderToTexture(

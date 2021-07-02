@@ -126,13 +126,13 @@ class TwoInputFilter(
         return if (hasSetFirstTexture) 1 else 0
     }
 
-    fun setInputFramebuffer(newInputFramebuffer: Framebuffer, textureIndex: Int) {
+    override fun setInputFramebuffer(framebuffer: Framebuffer?, textureIndex: Int) {
         if (textureIndex == 0) {
-            setInputFramebuffer(newInputFramebuffer)
+            super.setInputFramebuffer(framebuffer, textureIndex)
             hasSetFirstTexture = true
             getInputFramebuffer()?.lock()
         } else {
-            secondInputFramebuffer = newInputFramebuffer
+            secondInputFramebuffer = framebuffer
             secondInputFramebuffer?.lock()
         }
     }

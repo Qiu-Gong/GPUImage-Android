@@ -21,9 +21,10 @@ class TextureInput : Output() {
     fun processTextureWithFrameTime(frameTime: Long) {
         runAsynchronously(Runnable {
             targets.forEachIndexed { index, input ->
-                input.setInputSize(textureSize, targetTextureIndices.indexOf(index))
-                input.setInputFramebuffer(outputFramebuffer)
-                input.newFrameReadyAtTime(frameTime)
+                val textureIndices = targetTextureIndices.indexOf(index)
+                input.setInputSize(textureSize, textureIndices)
+                input.setInputFramebuffer(outputFramebuffer, textureIndices)
+                input.newFrameReadyAtTime(frameTime, textureIndices)
             }
         })
     }

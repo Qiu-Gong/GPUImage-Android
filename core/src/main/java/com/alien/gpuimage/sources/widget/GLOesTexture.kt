@@ -167,11 +167,12 @@ class GLOesTexture : Output() {
     }
 
     private fun informTargetsAboutNewFrameAtTime(time: Long) {
-        targets.forEachIndexed { _, input ->
-            input.setInputRotation(videoRotation)
-            input.setInputSize(oesSize, 0)
-            input.setInputFramebuffer(outputFramebuffer)
-            input.newFrameReadyAtTime(time)
+        targets.forEachIndexed { index, input ->
+            val textureIndices = targetTextureIndices.indexOf(index)
+            input.setInputRotation(videoRotation, textureIndices)
+            input.setInputSize(oesSize, textureIndices)
+            input.setInputFramebuffer(outputFramebuffer, textureIndices)
+            input.newFrameReadyAtTime(time, textureIndices)
         }
         outputFramebuffer?.unlock()
     }
