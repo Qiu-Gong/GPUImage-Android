@@ -3,6 +3,10 @@ package com.alien.gpuimage.filter
 import android.opengl.GLES20
 import java.nio.FloatBuffer
 
+/**
+ * Mask 滤镜可以将 一张黑白图片 和一张原图进行融合。
+ * 原图会将黑的部分进行透明度0处理
+ */
 class MaskBlendFilter : TwoInputFilter(fragmentShader = SHADER_STRING) {
     companion object {
         private const val SHADER_STRING =
