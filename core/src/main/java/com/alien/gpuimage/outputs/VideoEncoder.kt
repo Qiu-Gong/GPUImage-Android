@@ -85,6 +85,7 @@ class VideoEncoder(
         }
 
         override fun onFinish() {
+            muxer?.close()
             Logger.d(TAG, "onFinish")
         }
 
@@ -116,7 +117,6 @@ class VideoEncoder(
     fun release() {
         Logger.d(TAG, "release")
         encoder?.release()
-        muxer?.close()
 
         glView.viewDestroyed()
     }
