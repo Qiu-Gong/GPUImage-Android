@@ -12,11 +12,11 @@ public abstract class AbsEncodedFrameQueue<Output> {
 
     private static final String TAG = "EncodedFrameQueue";
 
-    private ByteBuffer[] mBuffers;
-    private MediaCodec.BufferInfo[] mBufferInfos;
+    private final ByteBuffer[] mBuffers;
+    private final MediaCodec.BufferInfo[] mBufferInfos;
     private int mReadIndex = 0;
     private int mWriteIndex = 0;
-    private Object mLock = new Object();
+    private final Object mLock = new Object();
 
     AbsEncodedFrameQueue(int maxFrameCount) {
         mBuffers = new ByteBuffer[maxFrameCount];
@@ -72,7 +72,7 @@ public abstract class AbsEncodedFrameQueue<Output> {
 
             t = System.currentTimeMillis() - t;
             if (t > 100) {
-                Logger.d(TAG, "write sample data block for " + Long.toString(t) + " millisecond");
+                Logger.d(TAG, "write sample data block for " + t + " millisecond");
             }
 
             synchronized (mLock) {
