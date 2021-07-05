@@ -41,8 +41,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.select_video).setOnClickListener {
-//            clickListener(it.id)
-            VideoActivity.startActivity(this, "/sdcard/DCIM/Camera/video_20210519_173718.mp4")
+            clickListener(it.id)
         }
 
         findViewById<View>(R.id.transform_view).setOnClickListener {
