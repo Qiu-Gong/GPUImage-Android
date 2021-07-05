@@ -31,7 +31,7 @@ class MediaMuxerImpl(outputPath: String) : IMediaMuxer {
     init {
         muxer = MediaMuxer(outputPath, DEFAULT_OUTPUT_FORMAT)
 
-        thread = HandlerThread("CoderHandler")
+        thread = HandlerThread("MediaMuxer")
         thread?.start()
         handler = Handler(thread!!.looper)
     }

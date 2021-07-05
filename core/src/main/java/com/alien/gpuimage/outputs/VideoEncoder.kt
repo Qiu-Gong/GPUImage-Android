@@ -36,12 +36,10 @@ class VideoEncoder(
     }
 
     private fun init(outPath: String) {
-        // Configure the encoder
         encoder = EncoderMediaCodec(EncoderMediaCodecCallback())
         encoder?.prepare(format)
         encoder?.start()
 
-        // Init muxer
         muxer = MediaMuxerImpl(outPath)
     }
 
@@ -77,16 +75,12 @@ class VideoEncoder(
         }
 
         override fun onDataAvailable(byteBuffer: ByteBuffer?, bufferInfo: MediaCodec.BufferInfo?) {
-//            Logger.d(
-//                TAG,
-//                "onDataAvailable bufferInfo: flags=${bufferInfo?.flags} time=${bufferInfo?.presentationTimeUs} size=${bufferInfo?.size} offset=${bufferInfo?.offset}"
-//            )
             muxer?.writeVideoData(byteBuffer, bufferInfo)
         }
 
         override fun onFinish() {
-            muxer?.close()
             Logger.d(TAG, "onFinish")
+            muxer?.close()
         }
 
         override fun onError(errorCode: Int) {
@@ -117,7 +111,6 @@ class VideoEncoder(
     fun release() {
         Logger.d(TAG, "release")
         encoder?.release()
-
         glView.viewDestroyed()
     }
 }

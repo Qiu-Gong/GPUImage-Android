@@ -11,11 +11,18 @@ import com.alien.gpuimage.external.video.DecoderMediaCodec
 import com.alien.gpuimage.external.video.VideoFormat
 import com.alien.gpuimage.outputs.Output
 import com.alien.gpuimage.sources.widget.GLOesTexture
+import com.alien.gpuimage.utils.Logger
 
 /**
  * 视频解码
+ * @param path 路径
+ * @param handler 解码线程
  */
 class VideoDecoder(path: String, private val handler: Handler) : Output() {
+
+    companion object {
+        private const val TAG = "VideoDecoder"
+    }
 
     private val glOesTexture: GLOesTexture = GLOesTexture()
     private var extractor: MediaExtractor? = null
@@ -120,10 +127,13 @@ class VideoDecoder(path: String, private val handler: Handler) : Output() {
     private inner class DecoderMediaCodecCallback : DecoderMediaCodec.DecoderInfoCallback {
 
         override fun onPrepared(surface: Surface?) {
+            Logger.d(TAG, "onPrepared")
             callback?.onPrepared()
         }
 
-        override fun onOutputFormatChanged(outputFormat: MediaFormat?) = Unit
+        override fun onOutputFormatChanged(outputFormat: MediaFormat?) {
+            Logger.d(TAG, "onOutputFormatChanged")
+        }
 
         override fun onFrameAvailable(surfaceTexture: SurfaceTexture?, presentationTimeUs: Long) {
             callback?.onFrameAvailableBefore(presentationTimeUs)
@@ -135,14 +145,19 @@ class VideoDecoder(path: String, private val handler: Handler) : Output() {
          * 解码结束
          */
         override fun onFinish() {
+            Logger.d(TAG, "onFinish")
             callback?.onFinish()
         }
 
         /**
          * 读取编码数据结束
          */
-        override fun onAllInputExtracted() = Unit
+        override fun onAllInputExtracted() {
+            Logger.d(TAG, "onAllInputExtracted")
+        }
 
-        override fun onError(errorCode: Int) = Unit
+        override fun onError(errorCode: Int) {
+            Logger.e(TAG, "onError:$errorCode")
+        }
     }
 }
