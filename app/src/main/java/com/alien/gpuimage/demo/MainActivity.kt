@@ -51,6 +51,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.two_input).setOnClickListener {
             clickListener(it.id)
         }
+
+        findViewById<View>(R.id.exo).setOnClickListener {
+            clickListener(it.id)
+        }
     }
 
     private fun clickListener(id: Int) {
@@ -122,6 +126,8 @@ class MainActivity : AppCompatActivity() {
                     TransformActivity.startActivity(this, path)
                 } else if (type == R.id.two_input) {
                     TwoInputActivity.startActivity(this, path)
+                } else if (type == R.id.exo) {
+                    ExoplayerActivity.startActivity(this, path)
                 }
             }
         }
