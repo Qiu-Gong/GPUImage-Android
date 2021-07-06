@@ -41,6 +41,7 @@ dependencies {
     implementation "com.google.android.material:material:$material"
     implementation 'com.leon:lfilepickerlibrary:1.8.0'
 
+    implementation "com.google.android.exoplayer:exoplayer-core:2.10.5"
 //    implementation 'com.alien.gpuimage:gpuimage:1.0.0-09'
     implementation project(':core')
 }

@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             .withStartPath("/storage/emulated/0/DCIM/")
             .withMutilyMode(false)
             .withFileFilter(
-                if (type == R.id.select_video) arrayOf(".mp4")
+                if (type == R.id.select_video || type == R.id.exo) arrayOf(".mp4")
                 else arrayOf(".png", ".jpeg", ".JPG")
             )
             .start()
