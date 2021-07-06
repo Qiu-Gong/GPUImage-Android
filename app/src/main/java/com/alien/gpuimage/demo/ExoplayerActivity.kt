@@ -9,6 +9,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.alien.gpuimage.outputs.TextureView
 import com.alien.gpuimage.sources.ExoplayerPipeline
+import com.alien.gpuimage.sources.ImageReaderPipeline
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -39,6 +40,7 @@ class ExoplayerActivity : AppCompatActivity() {
 
     private var textureView: TextureView? = null
     private var exoPipeline: ExoplayerPipeline? = null
+    private var imageReaderPipeline: ImageReaderPipeline? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +64,8 @@ class ExoplayerActivity : AppCompatActivity() {
 
         textureView = findViewById(R.id.sv_1)
         exoPipeline = ExoplayerPipeline()
+        imageReaderPipeline = ImageReaderPipeline(width, height, rotation)
+        exoPipeline?.addTarget(imageReaderPipeline)
         exoPipeline?.addTarget(textureView)
         exoPipeline?.setFormat(width, height, rotation)
         simpleExoPlayer.setVideoSurface(exoPipeline!!.getSurface())
