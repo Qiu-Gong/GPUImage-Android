@@ -5,6 +5,9 @@ import android.media.MediaExtractor
 import android.media.MediaFormat
 import java.security.InvalidParameterException
 
+/**
+ * 视频格式类封装
+ */
 object VideoFormat {
 
     fun selectVideoTrack(extractor: MediaExtractor): MediaFormat {

@@ -5,6 +5,9 @@ import com.alien.gpuimage.GLContext
 import com.alien.gpuimage.RotationMode
 import com.alien.gpuimage.Size
 
+/**
+ * 输入接口
+ */
 interface Input {
 
     fun setInputSize(inputSize: Size?, textureIndex: Int)

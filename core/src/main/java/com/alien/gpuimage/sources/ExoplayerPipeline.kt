@@ -6,6 +6,9 @@ import com.alien.gpuimage.GLContext
 import com.alien.gpuimage.outputs.Output
 import com.alien.gpuimage.sources.widget.GLOesTexture
 
+/**
+ * 用来 Exoplayer 上效果
+ */
 class ExoplayerPipeline : Output() {
 
     private val glOesTexture: GLOesTexture = GLOesTexture()

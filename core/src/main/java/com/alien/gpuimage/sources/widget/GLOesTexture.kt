@@ -8,6 +8,9 @@ import com.alien.gpuimage.outputs.Output
 import com.alien.gpuimage.utils.Logger
 import java.nio.FloatBuffer
 
+/**
+ * 把 Oes 纹理转 普通纹理，用在相机输出，MediaCodec输出，exoplayer输出
+ */
 class GLOesTexture : Output() {
 
     companion object {

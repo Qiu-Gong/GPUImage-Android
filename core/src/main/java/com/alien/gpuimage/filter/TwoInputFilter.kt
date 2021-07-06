@@ -4,6 +4,9 @@ import android.opengl.GLES20
 import com.alien.gpuimage.*
 import java.nio.FloatBuffer
 
+/**
+ * 双输入纹理，可以同理操作2张纹理，比如 混合
+ */
 open class TwoInputFilter(
     vertexShader: String? = SHADER_STRING,
     fragmentShader: String?

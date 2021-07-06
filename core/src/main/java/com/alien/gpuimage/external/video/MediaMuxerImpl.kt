@@ -8,6 +8,9 @@ import android.os.HandlerThread
 import android.util.Log
 import java.nio.ByteBuffer
 
+/**
+ * MediaMuxer 封装实例类
+ */
 class MediaMuxerImpl(outputPath: String) : IMediaMuxer {
 
     companion object {

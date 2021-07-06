@@ -6,6 +6,9 @@ import com.alien.gpuimage.TextureAttributes
 import com.alien.gpuimage.sources.Input
 import com.alien.gpuimage.utils.Logger
 
+/**
+ * 输出
+ */
 abstract class Output {
 
     companion object {

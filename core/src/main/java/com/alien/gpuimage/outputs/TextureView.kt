@@ -10,6 +10,9 @@ import com.alien.gpuimage.outputs.widget.GLView
 import com.alien.gpuimage.sources.Input
 import com.alien.gpuimage.utils.Logger
 
+/**
+ * TextureView，可以做动画效果，没有层级问题，相对耗电
+ */
 class TextureView(context: Context, attrs: AttributeSet) :
     android.view.TextureView(context, attrs), Input {
 

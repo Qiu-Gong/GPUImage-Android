@@ -8,6 +8,9 @@ import com.alien.gpuimage.sources.Input
 import com.alien.gpuimage.utils.Logger
 import java.nio.FloatBuffer
 
+/**
+ * 滤镜基础类
+ */
 open class Filter(
     vertexShader: String? = DEFAULT_VERTEX_SHADER,
     fragmentShader: String? = DEFAULT_FRAGMENT_SHADER

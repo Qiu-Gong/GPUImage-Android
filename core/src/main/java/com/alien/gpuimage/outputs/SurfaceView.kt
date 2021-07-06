@@ -10,6 +10,9 @@ import com.alien.gpuimage.outputs.widget.GLView
 import com.alien.gpuimage.sources.Input
 import com.alien.gpuimage.utils.Logger
 
+/**
+ * SurfaceView，无法做透明度效果，有层级问题
+ */
 open class SurfaceView(context: Context, attrs: AttributeSet) :
     android.view.SurfaceView(context, attrs), Input {
 

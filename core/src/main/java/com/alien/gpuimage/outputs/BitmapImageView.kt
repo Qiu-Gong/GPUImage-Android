@@ -15,6 +15,9 @@ import java.nio.Buffer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
+/**
+ * ImageView 显示
+ */
 class BitmapImageView(context: Context, attrs: AttributeSet) :
     AppCompatImageView(context, attrs, 0), Input {
 

@@ -11,6 +11,9 @@ import com.alien.gpuimage.outputs.widget.GLView
 import com.alien.gpuimage.utils.Logger
 import java.nio.ByteBuffer
 
+/**
+ * 把纹理转 RGBA，一般是用来做数据检测
+ */
 class ImageReaderPipeline(
     width: Int,
     height: Int,

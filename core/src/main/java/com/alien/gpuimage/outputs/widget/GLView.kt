@@ -5,11 +5,15 @@ import android.opengl.GLES20
 import android.view.Surface
 import com.alien.gpuimage.*
 import com.alien.gpuimage.egl.EglSurfaceBase
+import com.alien.gpuimage.egl.OffscreenSurface
 import com.alien.gpuimage.egl.WindowSurface
 import com.alien.gpuimage.sources.Input
 import com.alien.gpuimage.utils.Logger
 import java.nio.FloatBuffer
 
+/**
+ * 把 surface 或 SurfaceTexture 封装成 WindowSurface
+ */
 class GLView : Input {
 
     companion object {
@@ -49,7 +53,7 @@ class GLView : Input {
     private var inputSize: Size? = null
     private var inputFramebuffer: Framebuffer? = null
     private var inputRotation: RotationMode = RotationMode.NoRotation
-    private var eglSurface: EglSurfaceBase? = null
+    private var eglSurface: WindowSurface? = null
 
     private var displayProgram: GLProgram? = null
     private var positionAttribute: Int = 0
