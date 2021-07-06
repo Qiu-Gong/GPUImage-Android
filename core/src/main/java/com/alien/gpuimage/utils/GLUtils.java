@@ -1,40 +1,14 @@
 package com.alien.gpuimage.utils;
 
 import android.graphics.Bitmap;
-import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
-import android.opengl.GLES30;
-import android.os.Environment;
 import android.util.Log;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.IntRange;
 import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static android.opengl.GLES20.GL_CLAMP_TO_EDGE;
-import static android.opengl.GLES20.GL_LINEAR;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
-import static android.opengl.GLES20.GL_TEXTURE_MAG_FILTER;
-import static android.opengl.GLES20.GL_TEXTURE_MIN_FILTER;
-import static android.opengl.GLES20.GL_TEXTURE_WRAP_S;
-import static android.opengl.GLES20.GL_TEXTURE_WRAP_T;
-import static android.opengl.GLES20.GL_UNSIGNED_BYTE;
-import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glGenTextures;
-import static android.opengl.GLES20.glTexParameterf;
 
 /**
  * OpenGL 工具类。
@@ -80,5 +54,50 @@ public class GLUtils {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bitmap.copyPixelsFromBuffer(buffer);
         return bitmap;
+    }
+
+    public static Bitmap rgbaToBitmap(ByteBuffer data, int stride, int width, int height) {
+        byte[] srcData;
+        if (data.isDirect()) {
+            srcData = new byte[stride * height];
+            data.get(srcData);
+        } else {
+            srcData = data.array();
+        }
+
+        int[] colors = convertRgbaByteToColor(srcData, stride, width, height);
+        return Bitmap.createBitmap(colors, 0, width, width, height, Bitmap.Config.ARGB_8888);
+    }
+
+    private static int[] convertRgbaByteToColor(byte[] data, int stride, int width, int height) {
+        int size = data.length;
+        if (size == 0) {
+            return null;
+        }
+
+        int red, green, blue, alpha;
+        int colorOffset = 4;
+
+        // 逐行逐列读取，忽略大于宽度部分数据
+        int[] color = new int[width * height];
+        for (int row = 0; row < height; ++row) {
+            int srcRowIndex = row * stride;
+            int dstRowIndex = row * width;
+            for (int column = 0; column < width; ++column) {
+                red = convertByteToInt(data[column * colorOffset + srcRowIndex]);
+                green = convertByteToInt(data[column * colorOffset + 1 + srcRowIndex]);
+                blue = convertByteToInt(data[column * colorOffset + 2 + srcRowIndex]);
+                alpha = convertByteToInt(data[column * colorOffset + 3 + srcRowIndex]);
+                color[column + dstRowIndex] = (red << 16) | (green << 8) | blue | (alpha << 24);
+            }
+        }
+
+        return color;
+    }
+
+    private static int convertByteToInt(byte data) {
+        int heightBit = (data >> 4) & 0x0F;
+        int lowBit = 0x0F & data;
+        return heightBit * 16 + lowBit;
     }
 }
