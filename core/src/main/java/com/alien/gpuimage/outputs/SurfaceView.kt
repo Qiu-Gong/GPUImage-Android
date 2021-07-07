@@ -62,4 +62,8 @@ open class SurfaceView(context: Context, attrs: AttributeSet) :
     fun setCallback(callback: GLView.SurfaceViewCallback) {
         glView.callback = callback
     }
+
+    fun captureFrameToBitmap() {
+        glView.isCaptureFrame = true
+    }
 }

@@ -2,6 +2,7 @@ package com.alien.gpuimage.demo
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.SeekBar
@@ -69,6 +70,7 @@ class SurfaceViewActivity : AppCompatActivity() {
 
             override fun onViewDestroy() = Unit
             override fun onViewSwapToScreen() = Unit
+            override fun onCaptureFrameToBitmap(bitmap: Bitmap?) = Unit
         })
         surfaceView2?.setCallback(object : GLView.SurfaceViewCallback {
             override fun onViewCreate() {
@@ -77,6 +79,7 @@ class SurfaceViewActivity : AppCompatActivity() {
 
             override fun onViewDestroy() = Unit
             override fun onViewSwapToScreen() = Unit
+            override fun onCaptureFrameToBitmap(bitmap: Bitmap?) = Unit
         })
         surfaceView3?.setCallback(object : GLView.SurfaceViewCallback {
             override fun onViewCreate() {
@@ -85,6 +88,7 @@ class SurfaceViewActivity : AppCompatActivity() {
 
             override fun onViewDestroy() = Unit
             override fun onViewSwapToScreen() = Unit
+            override fun onCaptureFrameToBitmap(bitmap: Bitmap?) = Unit
         })
 
         findViewById<AppCompatSeekBar>(R.id.seekbar).setOnSeekBarChangeListener(object :

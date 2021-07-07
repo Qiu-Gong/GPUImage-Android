@@ -2,6 +2,7 @@ package com.alien.gpuimage.demo
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -52,11 +53,9 @@ class TwoInputActivity : AppCompatActivity() {
                 picture2?.processPictureSynchronously()
             }
 
-            override fun onViewDestroy() {
-            }
-
-            override fun onViewSwapToScreen() {
-            }
+            override fun onViewDestroy() = Unit
+            override fun onViewSwapToScreen() = Unit
+            override fun onCaptureFrameToBitmap(bitmap: Bitmap?) = Unit
         })
     }
 
