@@ -10,7 +10,8 @@ import androidx.appcompat.widget.AppCompatSeekBar
 import com.alien.gpuimage.GLContext
 import com.alien.gpuimage.filter.BrightnessFilter
 import com.alien.gpuimage.filter.Filter
-import com.alien.gpuimage.outputs.BitmapImageView
+import com.alien.gpuimage.outputs.BitmapView
+import com.alien.gpuimage.outputs.ImageView
 import com.alien.gpuimage.sources.Picture
 import com.alien.gpuimage.utils.Logger
 import java.io.File
@@ -41,10 +42,10 @@ class ImageActivity : AppCompatActivity() {
         if (!File(path ?: "").exists()) return
 
         GLContext.print()
-        val iv1 = findViewById<BitmapImageView>(R.id.iv_1)
-        val iv2 = findViewById<BitmapImageView>(R.id.iv_2)
-        val iv3 = findViewById<BitmapImageView>(R.id.iv_3)
-        val iv4 = findViewById<BitmapImageView>(R.id.iv_4)
+        val iv1 = findViewById<ImageView>(R.id.iv_1)
+        val iv2 = findViewById<ImageView>(R.id.iv_2)
+        val iv3 = findViewById<ImageView>(R.id.iv_3)
+        val iv4 = findViewById<ImageView>(R.id.iv_4)
 
         val option = BitmapFactory.Options().apply { this.inSampleSize = 4 }
         val bitmap = BitmapFactory.decodeFile(path, option)
