@@ -38,6 +38,11 @@ data class Size(var width: Int = 0, var height: Int = 0) {
         result = 31 * result + height
         return result
     }
+
+    fun setSize(size: Size) {
+        this.width = size.width
+        this.height = size.height
+    }
 }
 
 data class TextureAttributes(
