@@ -179,6 +179,8 @@ class GLView : Input {
 
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
         currentViewSize?.let { GLES20.glViewport(0, 0, it.width, it.height) }
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
+        GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0)
 
         GLES20.glEnableVertexAttribArray(positionAttribute)
         GLES20.glEnableVertexAttribArray(inputTextureCoordinateAttribute)
