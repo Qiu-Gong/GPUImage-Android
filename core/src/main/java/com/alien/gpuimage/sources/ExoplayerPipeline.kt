@@ -19,6 +19,7 @@ class ExoplayerPipeline : Output() {
         val create = !GLContext.contextIsExist()
         if (create) {
             GLContext(true)
+            runSynchronously(Runnable { GLContext.useProcessingContext() })
         }
 
         // 创建 Program

@@ -19,29 +19,42 @@ class Picture : Output {
     }
 
     private var bitmap: Bitmap? = null
+    private var recycle: Boolean = false
 
-    private var hasProcessedImage: Boolean = false
     private var pixelSizeOfImage: Size? = null
 
-    constructor(bitmap: Bitmap, recycle: Boolean) {
+    constructor(bitmap: Bitmap? = null, recycle: Boolean) {
         init(bitmap, recycle)
     }
 
-    constructor(path: String) {
-        init(BitmapFactory.decodeFile(path), true)
-    }
-
-    private fun init(bitmap: Bitmap, recycle: Boolean) {
+    private fun init(bitmap: Bitmap?, recycle: Boolean) {
         val create = !GLContext.contextIsExist()
         if (create) {
             GLContext(true)
+            runSynchronously(Runnable { GLContext.useProcessingContext() })
         }
 
         runSynchronously(Runnable {
-            this.bitmap = bitmap
-            loadImageToFBO()
-            if (recycle) {
-                this.bitmap?.recycle()
+            this.recycle = recycle
+            if (bitmap != null && !bitmap.isRecycled) {
+                this.bitmap = bitmap
+                loadImageToFBO()
+                if (this.recycle) {
+                    this.bitmap?.recycle()
+                }
+            }
+        })
+    }
+
+    fun setBitmap(bitmap: Bitmap?) {
+        runSynchronously(Runnable {
+            if (bitmap != null && !bitmap.isRecycled) {
+                this.bitmap = bitmap
+                release()
+                loadImageToFBO()
+                if (this.recycle) {
+                    this.bitmap?.recycle()
+                }
             }
         })
     }
@@ -69,7 +82,6 @@ class Picture : Output {
     }
 
     private fun loadImageToFBO() {
-        hasProcessedImage = false
         assert(bitmap?.width ?: 0 > 0 && bitmap?.height ?: 0 > 0)
 
         GLContext.useProcessingContext()

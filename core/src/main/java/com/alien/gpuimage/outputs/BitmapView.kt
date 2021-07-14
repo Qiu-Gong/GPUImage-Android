@@ -2,6 +2,7 @@ package com.alien.gpuimage.outputs
 
 import android.graphics.Bitmap
 import android.opengl.GLES20
+import android.opengl.GLUtils
 import com.alien.gpuimage.Framebuffer
 import com.alien.gpuimage.RotationMode
 import com.alien.gpuimage.Size
@@ -24,9 +25,14 @@ class BitmapView : Input {
     private var inputFramebuffer: Framebuffer? = null
     private var fboId: Int = 0
 
+    var callback: BitmapViewCallback? = null
     private var inBuffer: ByteBuffer? = null
     var bitmap: Bitmap? = null
         private set
+
+    interface BitmapViewCallback {
+        fun onViewSwapToScreen(bitmap: Bitmap?)
+    }
 
     override fun setInputSize(inputSize: Size?, textureIndex: Int) = Unit
 
@@ -65,6 +71,8 @@ class BitmapView : Input {
             inputFramebuffer?.unlock()
             inputFramebuffer = null
         }
+
+        callback?.onViewSwapToScreen(bitmap)
     }
 
     fun release() {
@@ -82,6 +90,7 @@ class BitmapView : Input {
         Logger.d(TAG, "readFboToBitmap fbo:$fbo width:$width height:$height")
         if (inBuffer == null || inBuffer?.capacity() != width * height * 4) {
             Logger.d(TAG, "create ByteBuffer")
+            inBuffer?.clear()
             inBuffer = ByteBuffer.allocateDirect(width * height * 4)
             inBuffer?.order(ByteOrder.LITTLE_ENDIAN)
         }
@@ -97,10 +106,20 @@ class BitmapView : Input {
     private fun rgbaBufferToBitmap(buffer: Buffer?, width: Int, height: Int): Bitmap? {
         if (bitmap == null || bitmap?.width != width || bitmap?.height != height) {
             Logger.d(TAG, "create Bitmap")
+            bitmap?.recycle()
             bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         }
 
         bitmap?.copyPixelsFromBuffer(buffer)
         return bitmap
+    }
+
+    /**
+     * bitmap 写到纹理
+     */
+    fun writeBitmapToTexture(bitmap: Bitmap?) {
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, inputFramebuffer?.textureId ?: 0)
+        GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, bitmap)
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
     }
 }

@@ -98,6 +98,7 @@ class GLContext(createContext: Boolean = false) {
                 eglCore = EglCore(null, EglCore.FLAG_TRY_GLES3)
                 eglSurface = OffscreenSurface(eglCore, 1, 1)
             }
+            waitDone()
 
             currentContext = this
         }

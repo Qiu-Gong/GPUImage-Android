@@ -67,6 +67,7 @@ class VideoDecoder(path: String, private val handler: Handler) : Output() {
         val create = !GLContext.contextIsExist()
         if (create) {
             GLContext(true)
+            runSynchronously(Runnable { GLContext.useProcessingContext() })
         }
 
         // 编码器初始化
