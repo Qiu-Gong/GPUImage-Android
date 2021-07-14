@@ -46,6 +46,19 @@ abstract class Output {
         }
     }
 
+    fun removeTarget(input: Input?) {
+        val indexOf = targets.indexOf(input)
+        if (indexOf >= 0) {
+            targets.removeAt(indexOf)
+            targetTextureIndices.removeAt(indexOf)
+        }
+    }
+
+    fun removeTargets() {
+        targets.clear()
+        targetTextureIndices.clear()
+    }
+
     /**
      * 同步运行在 GL 线程
      */
