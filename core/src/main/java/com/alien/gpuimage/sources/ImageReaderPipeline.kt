@@ -14,78 +14,95 @@ import java.nio.ByteBuffer
 /**
  * 把纹理转 RGBA，一般是用来做数据检测
  */
-class ImageReaderPipeline(
-    width: Int,
-    height: Int,
-    rotation: Int = 0,
-    format: Int = PixelFormat.RGBA_8888,
-    maxImages: Int = 3
-) : Input {
+class ImageReaderPipeline(width: Int, height: Int, rotation: Int = 0) : Input {
 
     companion object {
         private const val TAG = "ImageReaderPipeline"
     }
 
-    private val glView: GLView = GLView()
+    private var glView: GLView? = null
     private var imageReader: ImageReader? = null
 
     private var thread: HandlerThread? = null
-    private var handler: Handler? = null
+    var handler: Handler? = null
+        private set
+
+    private var rotationImageReader: Int = 0
+    private var widthImageReader: Int = 0
+    private var heightImageReader: Int = 0
+
+    var callback: ImageReaderPipelineCallback? = null
+
+    interface ImageReaderPipelineCallback {
+        fun detect(data: ByteBuffer, width: Int, height: Int, rotation: Int, stride: Int)
+    }
+
+    private val onImageReaderCallback = ImageReader.OnImageAvailableListener { reader ->
+        val image = reader.acquireNextImage()
+        val planes = image.planes
+        val stride = planes[0].rowStride
+        val buffer = planes[0].buffer
+        Logger.d(TAG, "width:$widthImageReader height:$heightImageReader rotation:$rotation stride:$stride")
+        callback?.detect(buffer, widthImageReader, heightImageReader, rotation, stride)
+        image.close()
+    }
 
     init {
-
         thread = HandlerThread("ImageReader")
         thread?.start()
         handler = Handler(thread!!.looper)
 
         runSynchronouslyGpu(Runnable {
-            var w: Int = 0
-            var h: Int = 0
-            if (rotation == 270 || rotation == 90) {
-                w = height
-                h = width
-            } else {
-                w = width
-                h = height
+            if (width != 0 || height != 0) {
+                init(rotation, width, height)
             }
-
-            imageReader = ImageReader.newInstance(w, h, format, maxImages)
-            imageReader?.setOnImageAvailableListener({
-                val image = it.acquireNextImage()
-                val planes = image.planes
-                val stride = planes[0].rowStride
-                val buffer = planes[0].buffer
-                detect(buffer, w, h, rotation, stride)
-                image.close()
-            }, handler)
-            glView.viewCreate(imageReader!!.surface)
-            glView.viewChange(w, h)
         })
     }
 
+    private fun init(rotation: Int, width: Int, height: Int) {
+        rotationImageReader = rotation
+        if (rotationImageReader == 270 || rotationImageReader == 90) {
+            widthImageReader = height
+            heightImageReader = width
+        } else {
+            widthImageReader = width
+            heightImageReader = height
+        }
+
+        imageReader =
+            ImageReader.newInstance(widthImageReader, heightImageReader, PixelFormat.RGBA_8888, 3)
+        imageReader?.setOnImageAvailableListener(onImageReaderCallback, handler)
+
+        glView = GLView()
+        glView?.viewCreate(imageReader!!.surface)
+        glView?.viewChange(widthImageReader, heightImageReader)
+    }
+
     override fun setInputSize(inputSize: Size?, textureIndex: Int) {
-        glView.setInputSize(inputSize, textureIndex)
+        glView?.setInputSize(inputSize, textureIndex)
     }
 
     override fun setInputFramebuffer(framebuffer: Framebuffer?, textureIndex: Int) {
-        glView.setInputFramebuffer(framebuffer, textureIndex)
+        glView?.setInputFramebuffer(framebuffer, textureIndex)
     }
 
     override fun setInputRotation(inputRotation: RotationMode, textureIndex: Int) {
-        glView.setInputRotation(inputRotation, textureIndex)
+        glView?.setInputRotation(inputRotation, textureIndex)
     }
 
     override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
-        glView.newFrameReadyAtTime(time, textureIndex)
+        glView?.newFrameReadyAtTime(time, textureIndex)
     }
 
-    open fun detect(data: ByteBuffer, width: Int, height: Int, rotation: Int, stride: Int) {
-        Logger.d(TAG, "width:$width height:$height rotation:$rotation stride:$stride")
+    fun resetSize(width: Int, height: Int) {
+        imageReader?.close()
+        glView?.viewDestroyed()
+        init(rotationImageReader, width, height)
     }
 
     fun release() {
         imageReader?.close()
-        glView.viewDestroyed()
+        glView?.viewDestroyed()
 
         thread?.quitSafely()
         thread?.join()
