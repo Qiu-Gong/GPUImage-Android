@@ -49,4 +49,4 @@ project.ext {
     mavenArtifactId = "gpuimage"
     mavenVersion = "1.0.0-17"
 }
-apply from: file("../maven_yidian.gradle")
+apply from: file("../maven2.gradle")
