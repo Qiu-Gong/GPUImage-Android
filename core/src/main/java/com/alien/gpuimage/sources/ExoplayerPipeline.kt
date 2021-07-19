@@ -51,6 +51,10 @@ class ExoplayerPipeline : Output() {
         glOesTexture.addTarget(input)
     }
 
+    override fun addTarget(input: Input?, textureLocation: Int) {
+        glOesTexture.addTarget(input, textureLocation)
+    }
+
     override fun release() {
         glOesTexture.release()
         outputSurface?.release()

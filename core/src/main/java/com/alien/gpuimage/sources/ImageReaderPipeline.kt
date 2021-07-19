@@ -14,7 +14,10 @@ import java.nio.ByteBuffer
 /**
  * 把纹理转 RGBA，一般是用来做数据检测
  */
-class ImageReaderPipeline(width: Int, height: Int, rotation: Int = 0) : Input {
+class ImageReaderPipeline(
+    handler: Handler? = null,
+    width: Int, height: Int, rotation: Int = 0
+) : Input {
 
     companion object {
         private const val TAG = "ImageReaderPipeline"
@@ -24,8 +27,7 @@ class ImageReaderPipeline(width: Int, height: Int, rotation: Int = 0) : Input {
     private var imageReader: ImageReader? = null
 
     private var thread: HandlerThread? = null
-    var handler: Handler? = null
-        private set
+    private var imageReaderHandler: Handler? = null
 
     private var rotationImageReader: Int = 0
     private var widthImageReader: Int = 0
@@ -42,15 +44,22 @@ class ImageReaderPipeline(width: Int, height: Int, rotation: Int = 0) : Input {
         val planes = image.planes
         val stride = planes[0].rowStride
         val buffer = planes[0].buffer
-        Logger.d(TAG, "width:$widthImageReader height:$heightImageReader rotation:$rotation stride:$stride")
+        Logger.d(
+            TAG,
+            "width:$widthImageReader height:$heightImageReader rotation:$rotation stride:$stride"
+        )
         callback?.detect(buffer, widthImageReader, heightImageReader, rotation, stride)
         image.close()
     }
 
     init {
-        thread = HandlerThread("ImageReader")
-        thread?.start()
-        handler = Handler(thread!!.looper)
+        if (handler == null) {
+            thread = HandlerThread("ImageReader")
+            thread?.start()
+            imageReaderHandler = Handler(thread!!.looper)
+        } else {
+            imageReaderHandler = handler
+        }
 
         runSynchronouslyGpu(Runnable {
             if (width != 0 || height != 0) {
@@ -71,7 +80,7 @@ class ImageReaderPipeline(width: Int, height: Int, rotation: Int = 0) : Input {
 
         imageReader =
             ImageReader.newInstance(widthImageReader, heightImageReader, PixelFormat.RGBA_8888, 3)
-        imageReader?.setOnImageAvailableListener(onImageReaderCallback, handler)
+        imageReader?.setOnImageAvailableListener(onImageReaderCallback, imageReaderHandler)
 
         glView = GLView()
         glView?.viewCreate(imageReader!!.surface)
@@ -92,6 +101,10 @@ class ImageReaderPipeline(width: Int, height: Int, rotation: Int = 0) : Input {
 
     override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
         glView?.newFrameReadyAtTime(time, textureIndex)
+    }
+
+    fun getHandler(): Handler? {
+        return imageReaderHandler
     }
 
     fun resetSize(width: Int, height: Int) {
