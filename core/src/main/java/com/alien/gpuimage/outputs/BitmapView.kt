@@ -50,6 +50,7 @@ class BitmapView : Input {
             } else {
                 if (fboId == 0) {
                     fboId = intArray { fbo -> GLES20.glGenFramebuffers(1, fbo, 0) }
+                    Logger.d(TAG, "create fbo $fboId")
                 }
             }
 
@@ -69,7 +70,6 @@ class BitmapView : Input {
             Logger.d(TAG, "imageView in ${inputFramebuffer.toString()}")
             readFboToBitmap(fboId, it.width, it.height)
             inputFramebuffer?.unlock()
-            inputFramebuffer = null
         }
 
         callback?.onViewSwapToScreen(bitmap)

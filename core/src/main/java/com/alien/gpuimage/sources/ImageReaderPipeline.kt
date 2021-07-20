@@ -108,9 +108,11 @@ class ImageReaderPipeline(
     }
 
     fun resetSize(width: Int, height: Int) {
-        imageReader?.close()
-        glView?.viewDestroyed()
-        init(rotationImageReader, width, height)
+        if (widthImageReader != width || heightImageReader != height) {
+            imageReader?.close()
+            glView?.viewDestroyed()
+            init(rotationImageReader, width, height)
+        }
     }
 
     fun release() {
