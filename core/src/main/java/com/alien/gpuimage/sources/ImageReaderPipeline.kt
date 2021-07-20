@@ -62,7 +62,7 @@ class ImageReaderPipeline(
         }
 
         runSynchronouslyGpu(Runnable {
-            if (width != 0 || height != 0) {
+            if (width != 0 && height != 0) {
                 init(rotation, width, height)
             }
         })
@@ -108,11 +108,13 @@ class ImageReaderPipeline(
     }
 
     fun resetSize(width: Int, height: Int) {
-        if (widthImageReader != width || heightImageReader != height) {
-            imageReader?.close()
-            glView?.viewDestroyed()
-            init(rotationImageReader, width, height)
-        }
+        runSynchronouslyGpu(Runnable {
+            if (widthImageReader != width || heightImageReader != height) {
+                imageReader?.close()
+                glView?.viewDestroyed()
+                init(rotationImageReader, width, height)
+            }
+        })
     }
 
     fun release() {

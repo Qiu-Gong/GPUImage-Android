@@ -108,7 +108,7 @@ class GLContext(createContext: Boolean = false) {
     fun release() {
         runSynchronous(Runnable {
             framebufferCache?.release()
-            shaderProgramCache.values.forEach { it.release() }
+            shaderProgramCache.values.forEach { it.release(true) }
         })
 
         eglSurface?.releaseEglSurface()
@@ -147,14 +147,18 @@ class GLContext(createContext: Boolean = false) {
         var value = shaderProgramCache[key]
         if (value == null) {
             value = GLProgram(vertexShader, fragmentShader)
+            value.programReferenceCount++
             shaderProgramCache[key] = value
+        } else {
+            value.programReferenceCount++
         }
         return value
     }
 
     private fun deleteProgram(value: GLProgram?) {
-        value?.release()
-        shaderProgramCache.values.remove(value)
+        if (value?.release(false) == true) {
+            shaderProgramCache.values.remove(value)
+        }
     }
 
     private fun setContextShaderProgram(program: GLProgram?) {

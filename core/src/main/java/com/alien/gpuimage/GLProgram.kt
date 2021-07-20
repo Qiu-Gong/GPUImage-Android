@@ -26,6 +26,8 @@ class GLProgram() {
 
     private val attributes: MutableList<String> = mutableListOf()
 
+    var programReferenceCount: Int = 0
+
     constructor(vertexShader: String, fragmentShader: String) : this() {
         program = GLES20.glCreateProgram()
 
@@ -101,7 +103,11 @@ class GLProgram() {
         GLES20.glUseProgram(program)
     }
 
-    fun release() {
+    fun release(force: Boolean): Boolean {
+        if (!force && programReferenceCount-- > 0) {
+            return false
+        }
+
         if (vertShader > 0)
             GLES20.glDeleteShader(vertShader)
 
@@ -112,6 +118,8 @@ class GLProgram() {
             GLES20.glDeleteProgram(program)
 
         attributes.clear()
+
+        return true
     }
 
     fun addAttribute(attributeName: String) {
@@ -132,6 +140,6 @@ class GLProgram() {
     }
 
     override fun toString(): String {
-        return "program:$program attributes:${attributes}"
+        return "program:$program attributes:${attributes} programReferenceCount${programReferenceCount}"
     }
 }
