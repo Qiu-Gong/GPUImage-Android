@@ -64,7 +64,7 @@ class ExoplayerActivity : AppCompatActivity() {
 
         textureView = findViewById(R.id.sv_1)
         exoPipeline = ExoplayerPipeline()
-        imageReaderPipeline = ImageReaderPipeline(width, height, rotation)
+        imageReaderPipeline = ImageReaderPipeline(null, width, height, rotation)
         exoPipeline?.addTarget(imageReaderPipeline)
         exoPipeline?.addTarget(textureView)
         exoPipeline?.setFormat(width, height, rotation)

@@ -141,6 +141,18 @@ class Framebuffer {
         GLES20.glViewport(0, 0, width, height)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
         GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0)
+
+        // 检查 fbo 是否和纹理一致
+        val buf = IntArray(1)
+        GLES20.glGetFramebufferAttachmentParameteriv(
+            GLES20.GL_FRAMEBUFFER,
+            GLES20.GL_COLOR_ATTACHMENT0,
+            GLES20.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME,
+            buf, 0
+        )
+        if (buf[0] != textureId) {
+            Logger.e(TAG, "bind textureId error... ${toString()}")
+        }
     }
 
     fun lock() {

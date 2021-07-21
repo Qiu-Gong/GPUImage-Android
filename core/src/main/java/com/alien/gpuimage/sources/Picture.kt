@@ -87,7 +87,7 @@ class Picture : Output {
         GLContext.useProcessingContext()
         pixelSizeOfImage = GLContext.withinTextureForSize(Size(bitmap!!.width, bitmap!!.height))
         outputFramebuffer =
-            GLContext.sharedFramebufferCache()?.fetchFramebuffer(pixelSizeOfImage, true)
+            GLContext.sharedFramebufferCache()?.fetchFramebuffer(pixelSizeOfImage, false)
         outputFramebuffer?.disableReferenceCounting()
         Logger.d(TAG, "picture out ${outputFramebuffer.toString()}")
 
