@@ -95,7 +95,7 @@ open class Filter(
     }
 
     override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
-        renderToTexture(IMAGE_VERTICES, textureCoordinatesForRotation(inputRotation, false))
+        renderToTexture(DataBuffer.IMAGE_VERTICES, DataBuffer.textureCoordinatesForRotation(inputRotation, false))
         informTargetsAboutNewFrameAtTime(time)
     }
 
@@ -172,7 +172,7 @@ open class Filter(
 
     open fun rotatedSize(sizeToRotate: Size, textureIndex: Int): Size {
         val rotatedSize = Size(sizeToRotate.width, sizeToRotate.height)
-        if (rotationSwapsWidthAndHeight(inputRotation)) {
+        if (DataBuffer.rotationSwapsWidthAndHeight(inputRotation)) {
             rotatedSize.width = sizeToRotate.height
             rotatedSize.height = sizeToRotate.width
         }

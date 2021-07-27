@@ -55,7 +55,7 @@ class GLOesTexture : Output() {
             GLContext.useProcessingContext()
 
             // OES 纹理
-            oesTexture = intArray { GLES20.glGenTextures(1, it, 0) }
+            oesTexture = DataBuffer.intArray { GLES20.glGenTextures(1, it, 0) }
             GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, oesTexture)
             GLES20.glTexParameteri(
                 GLES11Ext.GL_TEXTURE_EXTERNAL_OES,
@@ -134,7 +134,7 @@ class GLOesTexture : Output() {
     fun onFrameAvailable(surfaceTexture: SurfaceTexture?, presentationTimeUs: Long) {
         runSynchronously(Runnable {
             surfaceTexture?.updateTexImage()
-            renderToTexture(IMAGE_VERTICES, textureCoordinatesForRotation(videoRotation, false))
+            renderToTexture(DataBuffer.IMAGE_VERTICES, DataBuffer.textureCoordinatesForRotation(videoRotation, false))
             informTargetsAboutNewFrameAtTime(presentationTimeUs)
         })
     }

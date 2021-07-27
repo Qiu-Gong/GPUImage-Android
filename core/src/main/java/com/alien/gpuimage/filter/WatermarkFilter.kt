@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.RectF
 import android.opengl.GLES20
-import com.alien.gpuimage.createFloatBuffer
+import com.alien.gpuimage.DataBuffer
 import com.alien.gpuimage.sources.Picture
 import java.nio.FloatBuffer
 
@@ -18,7 +18,7 @@ class WatermarkFilter(bitmap: Bitmap) : Filter() {
     private var position: Point = Point(0, 0)
     private var watermarkRect: RectF = RectF()
     private var windowVertices: FloatArray = FloatArray(8)
-    private var windowVerticesBuffer: FloatBuffer = createFloatBuffer(windowVertices)
+    private var windowVerticesBuffer: FloatBuffer = DataBuffer.createFloatBuffer(windowVertices)
 
     init {
         picture = Picture(bitmap, false)

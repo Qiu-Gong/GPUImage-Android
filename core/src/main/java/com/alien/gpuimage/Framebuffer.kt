@@ -71,7 +71,7 @@ class Framebuffer {
     private fun generateFramebuffer() {
         Logger.d(TAG, "generateFramebuffer")
 
-        framebufferId = intArray { GLES20.glGenFramebuffers(1, it, 0) }
+        framebufferId = DataBuffer.intArray { GLES20.glGenFramebuffers(1, it, 0) }
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, framebufferId)
         generateTexture()
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId)
@@ -100,7 +100,7 @@ class Framebuffer {
     private fun generateTexture() {
         Logger.d(TAG, "generateTexture")
 
-        textureId = intArray { GLES20.glGenTextures(1, it, 0) }
+        textureId = DataBuffer.intArray { GLES20.glGenTextures(1, it, 0) }
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId)
         GLES20.glTexParameteri(
             GLES20.GL_TEXTURE_2D,

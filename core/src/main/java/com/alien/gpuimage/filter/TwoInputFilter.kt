@@ -107,7 +107,7 @@ open class TwoInputFilter(
         GLES20.glEnableVertexAttribArray(filterSecondTextureCoordinateAttribute)
         GLES20.glVertexAttribPointer(
             filterSecondTextureCoordinateAttribute, 2, GLES20.GL_FLOAT, false, 0,
-            textureCoordinatesForRotation(inputRotation2, false)
+            DataBuffer.textureCoordinatesForRotation(inputRotation2, false)
         )
 
         // 绘制
@@ -163,7 +163,7 @@ open class TwoInputFilter(
             inputRotation2
         }
 
-        if (rotationSwapsWidthAndHeight(rotationToCheck)) {
+        if (DataBuffer.rotationSwapsWidthAndHeight(rotationToCheck)) {
             rotatedSize.width = sizeToRotate.height
             rotatedSize.height = sizeToRotate.width
         }

@@ -1,10 +1,9 @@
 package com.alien.gpuimage.filter
 
 import android.graphics.RectF
-import com.alien.gpuimage.IMAGE_VERTICES
+import com.alien.gpuimage.DataBuffer
 import com.alien.gpuimage.RotationMode
 import com.alien.gpuimage.Size
-import com.alien.gpuimage.createFloatBuffer
 import java.nio.FloatBuffer
 
 /**
@@ -15,7 +14,7 @@ class CropFilter : Filter() {
     private val cropRegion = RectF(0f, 0f, 1f, 1f)
     private val originallySuppliedInputSize: Size = Size()
     private val cropTextureCoordinates: FloatBuffer =
-        createFloatBuffer(floatArrayOf(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f))
+        DataBuffer.createFloatBuffer(floatArrayOf(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f))
 
     override fun setInputSize(inputSize: Size?, textureIndex: Int) {
         val rotatedSize = rotatedSize(inputSize!!, textureIndex)
@@ -39,7 +38,7 @@ class CropFilter : Filter() {
     }
 
     override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
-        renderToTexture(IMAGE_VERTICES, cropTextureCoordinates)
+        renderToTexture(DataBuffer.IMAGE_VERTICES, cropTextureCoordinates)
         informTargetsAboutNewFrameAtTime(time)
     }
 

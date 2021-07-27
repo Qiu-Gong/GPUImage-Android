@@ -53,7 +53,7 @@ class GLContext(createContext: Boolean = false) {
 
         fun withinTextureForSize(inputSize: Size): Size {
             val maxTextureSize =
-                intArray { GLES20.glGetIntegerv(GLES20.GL_MAX_TEXTURE_SIZE, it, 0) }
+                DataBuffer.intArray { GLES20.glGetIntegerv(GLES20.GL_MAX_TEXTURE_SIZE, it, 0) }
 
             if ((inputSize.width < maxTextureSize) && (inputSize.height < maxTextureSize)) {
                 return inputSize
@@ -163,7 +163,7 @@ class GLContext(createContext: Boolean = false) {
 
     private fun setContextShaderProgram(program: GLProgram?) {
         useAsCurrentContext()
-        val currentProgram = intArray {
+        val currentProgram = DataBuffer.intArray {
             GLES20.glGetIntegerv(GLES20.GL_CURRENT_PROGRAM, it, 0)
         }
         if (currentShaderProgram != program || (currentShaderProgram?.program != currentProgram)) {

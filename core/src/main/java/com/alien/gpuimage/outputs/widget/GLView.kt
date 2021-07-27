@@ -138,7 +138,7 @@ class GLView : Input {
             imageVertices[5] = heightScaling
             imageVertices[6] = widthScaling
             imageVertices[7] = heightScaling
-            imageVerticesBuffer = createFloatBuffer(imageVertices)
+            imageVerticesBuffer = DataBuffer.createFloatBuffer(imageVertices)
         }
     }
 
@@ -209,7 +209,7 @@ class GLView : Input {
         if (isCaptureFrame) {
             GLES20.glVertexAttribPointer(
                 inputTextureCoordinateAttribute, 2, GLES20.GL_FLOAT, false, 0,
-                textureCoordinatesForRotation(inputRotation, false)
+                DataBuffer.textureCoordinatesForRotation(inputRotation, false)
             )
             GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
             val bitmap = captureFrameToBitmap()
@@ -219,7 +219,7 @@ class GLView : Input {
 
         GLES20.glVertexAttribPointer(
             inputTextureCoordinateAttribute, 2, GLES20.GL_FLOAT, false, 0,
-            textureCoordinatesForRotation(inputRotation, true)
+            DataBuffer.textureCoordinatesForRotation(inputRotation, true)
         )
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
 

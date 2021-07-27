@@ -1,9 +1,8 @@
 package com.alien.gpuimage.filter
 
 import android.opengl.Matrix
+import com.alien.gpuimage.DataBuffer
 import com.alien.gpuimage.Size
-import com.alien.gpuimage.createFloatBuffer
-import com.alien.gpuimage.textureCoordinatesForRotation
 import java.nio.FloatBuffer
 
 /**
@@ -30,7 +29,7 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
             """
 
         val squareVertices =
-            createFloatBuffer(
+            DataBuffer.createFloatBuffer(
                 floatArrayOf(
                     -1.0f, -1.0f,
                     1.0f, -1.0f,
@@ -40,7 +39,7 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
             )
 
         val squareVerticesAnchorTL =
-            createFloatBuffer(
+            DataBuffer.createFloatBuffer(
                 floatArrayOf(
                     0.0f, 0.0f,
                     1.0f, 0.0f,
@@ -60,10 +59,10 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
 
     private var adjustedVerticesAnchorTL: FloatArray = FloatArray(8)
     private var adjustedVerticesAnchorTLFb: FloatBuffer =
-        createFloatBuffer(adjustedVerticesAnchorTL)
+        DataBuffer.createFloatBuffer(adjustedVerticesAnchorTL)
 
     private var adjustedVertices: FloatArray = FloatArray(8)
-    private var adjustedVerticesFb: FloatBuffer = createFloatBuffer(adjustedVertices)
+    private var adjustedVerticesFb: FloatBuffer = DataBuffer.createFloatBuffer(adjustedVertices)
 
     init {
         orthographicMatrix = FloatArray(16)
@@ -84,12 +83,12 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
             if (anchorTopLeft) {
                 renderToTexture(
                     squareVerticesAnchorTL,
-                    textureCoordinatesForRotation(getInputRotation(), false)
+                    DataBuffer.textureCoordinatesForRotation(getInputRotation(), false)
                 )
             } else {
                 renderToTexture(
                     squareVertices,
-                    textureCoordinatesForRotation(getInputRotation(), false)
+                    DataBuffer.textureCoordinatesForRotation(getInputRotation(), false)
                 )
             }
         } else {
@@ -111,7 +110,7 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
 
                 renderToTexture(
                     adjustedVerticesAnchorTLFb,
-                    textureCoordinatesForRotation(getInputRotation(), false)
+                    DataBuffer.textureCoordinatesForRotation(getInputRotation(), false)
                 )
             } else {
                 adjustedVertices[0] = -1.0f
@@ -128,7 +127,7 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
 
                 renderToTexture(
                     adjustedVerticesFb,
-                    textureCoordinatesForRotation(getInputRotation(), false)
+                    DataBuffer.textureCoordinatesForRotation(getInputRotation(), false)
                 )
             }
         }

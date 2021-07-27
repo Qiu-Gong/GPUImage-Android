@@ -3,10 +3,10 @@ package com.alien.gpuimage.outputs
 import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLUtils
+import com.alien.gpuimage.DataBuffer
 import com.alien.gpuimage.Framebuffer
 import com.alien.gpuimage.RotationMode
 import com.alien.gpuimage.Size
-import com.alien.gpuimage.intArray
 import com.alien.gpuimage.sources.Input
 import com.alien.gpuimage.utils.Logger
 import java.nio.Buffer
@@ -49,7 +49,7 @@ class BitmapView : Input {
                 fboId = it.framebufferId
             } else {
                 if (fboId == 0) {
-                    fboId = intArray { fbo -> GLES20.glGenFramebuffers(1, fbo, 0) }
+                    fboId = DataBuffer.intArray { fbo -> GLES20.glGenFramebuffers(1, fbo, 0) }
                     Logger.d(TAG, "create fbo $fboId")
                 }
             }
