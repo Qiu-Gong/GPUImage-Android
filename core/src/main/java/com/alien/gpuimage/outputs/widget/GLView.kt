@@ -61,7 +61,7 @@ class GLView : Input {
     private var inputTextureCoordinateAttribute: Int = 0
     private var inputImageTextureUniform: Int = 0
 
-    private var backgroundColor: BackgroundColor = BackgroundColor()
+    private var backgroundColor: BackgroundColor = BackgroundColor(0.0f, 0.0f, 0.0f, 0.0f)
     private var currentViewSize: Size? = null
     private var fillMode: FillModeType = FillModeType.FillModePreserveAspectRatio
     private var imageVertices: FloatArray = FloatArray(8)
