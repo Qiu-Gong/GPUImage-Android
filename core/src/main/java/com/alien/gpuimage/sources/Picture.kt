@@ -1,7 +1,6 @@
 package com.alien.gpuimage.sources
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.opengl.GLES20
 import android.opengl.GLUtils
 import com.alien.gpuimage.GLContext
@@ -22,6 +21,7 @@ class Picture : Output {
     private var recycle: Boolean = false
 
     private var pixelSizeOfImage: Size? = null
+    private var processRunnable = ProcessRunnable()
 
     constructor(bitmap: Bitmap? = null, recycle: Boolean) {
         init(bitmap, recycle)
@@ -57,6 +57,14 @@ class Picture : Output {
                 }
             }
         })
+    }
+
+    fun processPictureSingle() {
+        val handle = GLContext.sharedProcessingContext()?.getCurrentHandler()
+        if (handle?.hasCallbacks(processRunnable) == true) {
+            handle.removeCallbacks(processRunnable)
+        }
+        runAsynchronously(processRunnable)
     }
 
     fun processPicture() {
@@ -103,6 +111,17 @@ class Picture : Output {
         outputFramebuffer?.let {
             it.enableReferenceCounting()
             it.unlock()
+        }
+    }
+
+    private inner class ProcessRunnable : Runnable {
+        override fun run() {
+            targets.forEachIndexed { index, input ->
+                val textureIndices = targetTextureIndices[index]
+                input.setInputSize(pixelSizeOfImage, textureIndices)
+                input.setInputFramebuffer(outputFramebuffer, textureIndices)
+                input.newFrameReadyAtTime(System.currentTimeMillis(), textureIndices)
+            }
         }
     }
 }

@@ -127,6 +127,10 @@ class GLContext(createContext: Boolean = false) {
         return thread?.looper
     }
 
+    fun getCurrentHandler(): Handler? {
+        return handler
+    }
+
     private fun isCurrentContext(): Boolean {
         return eglCore?.isCurrentContext == true
     }
