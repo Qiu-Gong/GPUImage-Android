@@ -1,6 +1,7 @@
 package com.alien.gpuimage.outputs
 
 import android.content.Context
+import android.graphics.RectF
 import android.graphics.SurfaceTexture
 import android.util.AttributeSet
 import com.alien.gpuimage.Framebuffer
@@ -71,5 +72,9 @@ class TextureView(context: Context, attrs: AttributeSet) :
 
     fun captureFrameToBitmap() {
         glView.isCaptureFrame = true
+    }
+
+    fun getImageRectF(): RectF {
+        return glView.getImageRectF()
     }
 }

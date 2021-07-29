@@ -1,6 +1,7 @@
 package com.alien.gpuimage.outputs.widget
 
 import android.graphics.Bitmap
+import android.graphics.RectF
 import android.graphics.SurfaceTexture
 import android.opengl.GLES20
 import android.view.Surface
@@ -11,6 +12,7 @@ import com.alien.gpuimage.utils.Logger
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
+import kotlin.math.abs
 
 /**
  * 把 surface 或 SurfaceTexture 封装成 WindowSurface
@@ -113,16 +115,12 @@ class GLView : Input {
                 heightScaling = 1.0f
             }
             FillModeType.FillModePreserveAspectRatio -> {
-                widthScaling =
-                    insetSize.width.toFloat() / currentViewSize!!.width.toFloat()
-                heightScaling =
-                    insetSize.height.toFloat() / currentViewSize!!.height.toFloat()
+                widthScaling = insetSize.width.toFloat() / currentViewSize!!.width.toFloat()
+                heightScaling = insetSize.height.toFloat() / currentViewSize!!.height.toFloat()
             }
             FillModeType.FillModePreserveAspectRatioAndFill -> {
-                widthScaling =
-                    currentViewSize!!.height.toFloat() / insetSize.height.toFloat()
-                heightScaling =
-                    currentViewSize!!.width.toFloat() / insetSize.width.toFloat()
+                widthScaling = currentViewSize!!.height.toFloat() / insetSize.height.toFloat()
+                heightScaling = currentViewSize!!.width.toFloat() / insetSize.width.toFloat()
             }
         }
         val float = floatArrayOf(
@@ -287,5 +285,18 @@ class GLView : Input {
         bitmap?.copyPixelsFromBuffer(byteBuffer)
 
         return bitmap
+    }
+
+    fun getImageRectF(): RectF {
+        val widthScaling = abs(imageVertices[0])
+        val heightScaling = abs(imageVertices[1])
+        val viewSize = currentViewSize ?: Size(0, 0)
+
+        val left = (1f - widthScaling) / 2f * viewSize.width
+        val top = (1f - heightScaling) / 2f * viewSize.height
+        val right = left + widthScaling * viewSize.width
+        val bottom = top + heightScaling * viewSize.height
+
+        return RectF(left, top, right, bottom)
     }
 }

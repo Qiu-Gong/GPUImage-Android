@@ -1,6 +1,7 @@
 package com.alien.gpuimage.outputs
 
 import android.content.Context
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import com.alien.gpuimage.Framebuffer
@@ -26,6 +27,22 @@ open class SurfaceView(context: Context, attrs: AttributeSet) :
         this.holder?.addCallback(SurfaceCallbackImpl())
     }
 
+    override fun setInputSize(inputSize: Size?, textureIndex: Int) {
+        glView.setInputSize(inputSize, textureIndex)
+    }
+
+    override fun setInputFramebuffer(framebuffer: Framebuffer?, textureIndex: Int) {
+        glView.setInputFramebuffer(framebuffer, textureIndex)
+    }
+
+    override fun setInputRotation(inputRotation: RotationMode, textureIndex: Int) {
+        glView.setInputRotation(inputRotation, textureIndex)
+    }
+
+    override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
+        glView.newFrameReadyAtTime(time, textureIndex)
+    }
+
     private inner class SurfaceCallbackImpl : SurfaceHolder.Callback {
         override fun surfaceCreated(p0: SurfaceHolder) {
             Logger.d(TAG, "surfaceCreated")
@@ -43,27 +60,15 @@ open class SurfaceView(context: Context, attrs: AttributeSet) :
         }
     }
 
-    override fun setInputSize(inputSize: Size?, textureIndex: Int) {
-        glView.setInputSize(inputSize, textureIndex)
-    }
-
-    override fun setInputFramebuffer(framebuffer: Framebuffer?, textureIndex: Int) {
-        glView.setInputFramebuffer(framebuffer, textureIndex)
-    }
-
-    override fun setInputRotation(inputRotation: RotationMode, textureIndex: Int) {
-        glView.setInputRotation(inputRotation, textureIndex)
-    }
-
-    override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
-        glView.newFrameReadyAtTime(time, textureIndex)
-    }
-
     fun setCallback(callback: GLView.SurfaceViewCallback) {
         glView.callback = callback
     }
 
     fun captureFrameToBitmap() {
         glView.isCaptureFrame = true
+    }
+
+    fun getImageRectF(): RectF {
+        return glView.getImageRectF()
     }
 }
