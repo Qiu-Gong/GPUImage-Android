@@ -4,7 +4,7 @@ import android.graphics.SurfaceTexture
 import android.opengl.GLES11Ext
 import android.opengl.GLES20
 import com.alien.gpuimage.*
-import com.alien.gpuimage.outputs.Output
+import com.alien.gpuimage.sources.Output
 import com.alien.gpuimage.utils.Logger
 import java.nio.FloatBuffer
 

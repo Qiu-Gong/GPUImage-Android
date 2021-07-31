@@ -9,7 +9,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.alien.gpuimage.outputs.TextureView
 import com.alien.gpuimage.sources.ExoplayerPipeline
-import com.alien.gpuimage.sources.ImageReaderPipeline
+import com.alien.gpuimage.outputs.ImageReaderPipeline
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer

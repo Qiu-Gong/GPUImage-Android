@@ -3,8 +3,8 @@ package com.alien.gpuimage.filter
 import android.opengl.GLES20
 import android.text.TextUtils
 import com.alien.gpuimage.*
-import com.alien.gpuimage.outputs.Output
-import com.alien.gpuimage.sources.Input
+import com.alien.gpuimage.sources.Output
+import com.alien.gpuimage.outputs.Input
 import com.alien.gpuimage.utils.Logger
 import java.nio.FloatBuffer
 

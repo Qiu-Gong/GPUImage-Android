@@ -7,7 +7,7 @@ import android.opengl.GLES20
 import android.view.Surface
 import com.alien.gpuimage.*
 import com.alien.gpuimage.egl.WindowSurface
-import com.alien.gpuimage.sources.Input
+import com.alien.gpuimage.outputs.Input
 import com.alien.gpuimage.utils.Logger
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

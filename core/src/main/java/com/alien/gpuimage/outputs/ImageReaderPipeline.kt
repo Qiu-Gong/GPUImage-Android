@@ -1,4 +1,4 @@
-package com.alien.gpuimage.sources
+package com.alien.gpuimage.outputs
 
 import android.graphics.PixelFormat
 import android.media.ImageReader

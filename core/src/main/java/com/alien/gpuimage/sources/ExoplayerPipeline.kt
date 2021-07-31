@@ -3,7 +3,7 @@ package com.alien.gpuimage.sources
 import android.graphics.SurfaceTexture
 import android.view.Surface
 import com.alien.gpuimage.GLContext
-import com.alien.gpuimage.outputs.Output
+import com.alien.gpuimage.outputs.Input
 import com.alien.gpuimage.sources.widget.GLOesTexture
 
 /**

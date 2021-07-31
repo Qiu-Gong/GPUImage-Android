@@ -1,9 +1,8 @@
-package com.alien.gpuimage.outputs
+package com.alien.gpuimage.sources
 
 import com.alien.gpuimage.Framebuffer
 import com.alien.gpuimage.GLContext
 import com.alien.gpuimage.TextureAttributes
-import com.alien.gpuimage.sources.Input
 import com.alien.gpuimage.utils.Logger
 
 /**

@@ -9,7 +9,7 @@ import android.view.Surface
 import com.alien.gpuimage.GLContext
 import com.alien.gpuimage.external.video.DecoderMediaCodec
 import com.alien.gpuimage.external.video.VideoFormat
-import com.alien.gpuimage.outputs.Output
+import com.alien.gpuimage.outputs.Input
 import com.alien.gpuimage.sources.widget.GLOesTexture
 import com.alien.gpuimage.utils.Logger
 

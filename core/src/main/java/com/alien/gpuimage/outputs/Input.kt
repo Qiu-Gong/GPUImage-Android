@@ -1,4 +1,4 @@
-package com.alien.gpuimage.sources
+package com.alien.gpuimage.outputs
 
 import com.alien.gpuimage.Framebuffer
 import com.alien.gpuimage.GLContext

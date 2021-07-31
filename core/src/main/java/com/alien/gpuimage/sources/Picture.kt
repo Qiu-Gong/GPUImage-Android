@@ -5,7 +5,6 @@ import android.opengl.GLES20
 import android.opengl.GLUtils
 import com.alien.gpuimage.GLContext
 import com.alien.gpuimage.Size
-import com.alien.gpuimage.outputs.Output
 import com.alien.gpuimage.utils.Logger
 
 /**

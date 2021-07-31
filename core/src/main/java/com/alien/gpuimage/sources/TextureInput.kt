@@ -2,7 +2,6 @@ package com.alien.gpuimage.sources
 
 import com.alien.gpuimage.Framebuffer
 import com.alien.gpuimage.Size
-import com.alien.gpuimage.outputs.Output
 
 /**
  * 纹理输入（待使用）

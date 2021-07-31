@@ -10,7 +10,6 @@ import com.alien.gpuimage.Size
 import com.alien.gpuimage.external.video.EncoderMediaCodec
 import com.alien.gpuimage.external.video.MediaMuxerImpl
 import com.alien.gpuimage.outputs.widget.GLView
-import com.alien.gpuimage.sources.Input
 import com.alien.gpuimage.utils.Logger
 import java.nio.ByteBuffer
 

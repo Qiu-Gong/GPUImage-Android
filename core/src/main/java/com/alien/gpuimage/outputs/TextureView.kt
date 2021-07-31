@@ -8,7 +8,6 @@ import com.alien.gpuimage.Framebuffer
 import com.alien.gpuimage.RotationMode
 import com.alien.gpuimage.Size
 import com.alien.gpuimage.outputs.widget.GLView
-import com.alien.gpuimage.sources.Input
 import com.alien.gpuimage.utils.Logger
 
 /**
