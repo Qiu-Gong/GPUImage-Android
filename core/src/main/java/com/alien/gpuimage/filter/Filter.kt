@@ -120,7 +120,9 @@ open class Filter(
 
     override fun newImageFromCurrentlyProcessedOutput(): Bitmap? {
         usingNextFrameForImageCapture = false
-        return outputFramebuffer?.newImageFromFramebufferContents()
+        val result = outputFramebuffer?.newImageFromFramebufferContents()
+        outputFramebuffer?.unlock()
+        return result
     }
 
     open fun renderToTexture(vertices: FloatBuffer, textureCoordinates: FloatBuffer) {

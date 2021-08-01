@@ -125,7 +125,7 @@ class FramebufferCache {
     }
 
     override fun toString(): String {
-        val stringBuilder = StringBuilder()
+        val stringBuilder = StringBuilder("createCnt:${Framebuffer.createCnt} frameBuffers:${frameBuffers.values.size}\n")
         val iterator = frameBuffers.values.iterator()
         iterator.forEach {
             stringBuilder.append(it.toString()).append("\n")

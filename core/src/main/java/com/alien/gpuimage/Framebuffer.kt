@@ -12,6 +12,9 @@ class Framebuffer {
 
     companion object {
         private const val TAG = "Framebuffer"
+
+        var createCnt = 0
+            private set
     }
 
     var width: Int
@@ -49,6 +52,8 @@ class Framebuffer {
         } else {
             generateFramebuffer()
         }
+
+        createCnt++
     }
 
     constructor(width: Int, height: Int, inputTexture: Int) {
@@ -194,6 +199,10 @@ class Framebuffer {
 
     fun destroy() {
         Logger.d(TAG, "destroy framebufferId:$framebufferId textureId:$textureId")
+        if (framebufferId > 0 || textureId > 0) {
+            createCnt--
+        }
+
         if (framebufferId > 0) {
             GLES20.glDeleteFramebuffers(1, intArrayOf(framebufferId), 0)
             framebufferId = -1
