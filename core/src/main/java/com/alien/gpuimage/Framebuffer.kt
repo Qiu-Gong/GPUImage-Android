@@ -1,8 +1,11 @@
 package com.alien.gpuimage
 
+import android.graphics.Bitmap
 import android.opengl.GLES11Ext.GL_BGRA
 import android.opengl.GLES20
 import com.alien.gpuimage.utils.Logger
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 
 class Framebuffer {
@@ -190,6 +193,7 @@ class Framebuffer {
     }
 
     fun destroy() {
+        Logger.d(TAG, "destroy framebufferId:$framebufferId textureId:$textureId")
         if (framebufferId > 0) {
             GLES20.glDeleteFramebuffers(1, intArrayOf(framebufferId), 0)
             framebufferId = -1
@@ -199,6 +203,27 @@ class Framebuffer {
             GLES20.glDeleteTextures(1, intArrayOf(textureId), 0)
             textureId = -1
         }
+    }
+
+    fun newImageFromFramebufferContents(): Bitmap? {
+        assert(textureAttributes.internalFormat == GLES20.GL_RGBA) {
+            "For conversion to a Bitmap the output texture format for this filter must be GL_RGBA."
+        }
+        assert(textureAttributes.type == GLES20.GL_UNSIGNED_BYTE) {
+            "For conversion to a Bitmap the type of the output texture of this filter must be GL_UNSIGNED_BYTE."
+        }
+
+        val byteBuffer = ByteBuffer.allocateDirect(width * height * 4)
+        byteBuffer.order(ByteOrder.LITTLE_ENDIAN)
+        byteBuffer.rewind()
+        byteBuffer.position(0)
+
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, framebufferId)
+        GLES20.glReadPixels(0, 0, width, height, 6408, 5121, byteBuffer)
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        bitmap?.copyPixelsFromBuffer(byteBuffer)
+
+        return bitmap
     }
 
     override fun toString(): String {

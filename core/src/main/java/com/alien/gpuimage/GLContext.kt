@@ -76,6 +76,10 @@ class GLContext(createContext: Boolean = false) {
         fun print() {
             sharedProcessingContext()?.printUseMemory()
         }
+
+        fun gc() {
+            sharedProcessingContext()?.gc()
+        }
     }
 
     var eglCore: EglCore? = null
@@ -209,7 +213,7 @@ class GLContext(createContext: Boolean = false) {
         this.handler?.post(runnable)
     }
 
-    fun printUseMemory() {
+    private fun printUseMemory() {
         runAsynchronously(Runnable {
             Logger.d(TAG, "Fbo-> \n ${framebufferCache.toString()}")
 
@@ -219,6 +223,12 @@ class GLContext(createContext: Boolean = false) {
                 stringBuilder.append(it.toString()).append("\n")
             }
             Logger.d(TAG, "Program-> \n $stringBuilder")
+        })
+    }
+
+    private fun gc() {
+        runAsynchronously(Runnable {
+            sharedProcessingContext()?.framebufferCache?.gc()
         })
     }
 }

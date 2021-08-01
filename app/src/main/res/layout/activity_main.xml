@@ -67,4 +67,22 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/two_input" />
 
+    <Button
+        android:id="@+id/memory_print"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Memory_Print"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/exo" />
+
+    <Button
+        android:id="@+id/gc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GC"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memory_print" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

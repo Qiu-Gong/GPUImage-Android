@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.alien.gpuimage.GLContext
 import com.leon.lfilepickerlibrary.LFilePicker
 import java.util.*
 
@@ -54,6 +55,14 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.exo).setOnClickListener {
             clickListener(it.id)
+        }
+
+        findViewById<View>(R.id.memory_print).setOnClickListener {
+            GLContext.print()
+        }
+
+        findViewById<View>(R.id.gc).setOnClickListener {
+            GLContext.gc()
         }
     }
 

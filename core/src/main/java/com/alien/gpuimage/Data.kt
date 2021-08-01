@@ -1,9 +1,6 @@
 package com.alien.gpuimage
 
 import android.opengl.GLES20
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.nio.FloatBuffer
 
 /// region Data 数据
 data class Size(var width: Int = 0, var height: Int = 0) {
@@ -77,6 +74,10 @@ enum class RotationMode {
 /// region Callback
 interface Callback {
     fun function()
+}
+
+interface CallbackParam<T> {
+    fun function(t: T)
 }
 /// endregion
 

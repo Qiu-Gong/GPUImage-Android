@@ -1,5 +1,6 @@
 package com.alien.gpuimage.sources
 
+import android.graphics.Bitmap
 import com.alien.gpuimage.Framebuffer
 import com.alien.gpuimage.GLContext
 import com.alien.gpuimage.TextureAttributes
@@ -76,4 +77,12 @@ abstract class Output {
     fun runAsynchronously(runnable: Runnable) {
         GLContext.sharedProcessingContext()?.runAsynchronously(runnable)
     }
+
+    open fun useNextFrameForImageCapture() = Unit
+
+    fun imageFromCurrentFramebufferWithOrientation(): Bitmap? {
+        return newImageFromCurrentlyProcessedOutput()
+    }
+
+    open fun newImageFromCurrentlyProcessedOutput(): Bitmap? = null
 }

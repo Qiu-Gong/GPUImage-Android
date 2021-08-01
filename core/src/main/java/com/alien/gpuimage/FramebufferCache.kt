@@ -120,6 +120,10 @@ class FramebufferCache {
         framebufferTypeCounts.clear()
     }
 
+    fun gc() {
+        release()
+    }
+
     override fun toString(): String {
         val stringBuilder = StringBuilder()
         val iterator = frameBuffers.values.iterator()

@@ -1,10 +1,11 @@
 package com.alien.gpuimage.filter
 
+import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.text.TextUtils
 import com.alien.gpuimage.*
-import com.alien.gpuimage.sources.Output
 import com.alien.gpuimage.outputs.Input
+import com.alien.gpuimage.sources.Output
 import com.alien.gpuimage.utils.Logger
 import java.nio.FloatBuffer
 
@@ -56,6 +57,8 @@ open class Filter(
     protected val backgroundColor: BackgroundColor = BackgroundColor()
     private val uniformStateRestoration = HashMap<Int, Callback>()
 
+    private var usingNextFrameForImageCapture = false
+
     init {
         this.runSynchronouslyGpu(Runnable {
             if (!TextUtils.isEmpty(vertexShader) && !TextUtils.isEmpty(fragmentShader)) {
@@ -95,7 +98,10 @@ open class Filter(
     }
 
     override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
-        renderToTexture(DataBuffer.IMAGE_VERTICES, DataBuffer.textureCoordinatesForRotation(inputRotation, false))
+        renderToTexture(
+            DataBuffer.IMAGE_VERTICES,
+            DataBuffer.textureCoordinatesForRotation(inputRotation, false)
+        )
         informTargetsAboutNewFrameAtTime(time)
     }
 
@@ -108,6 +114,15 @@ open class Filter(
         })
     }
 
+    override fun useNextFrameForImageCapture() {
+        usingNextFrameForImageCapture = true
+    }
+
+    override fun newImageFromCurrentlyProcessedOutput(): Bitmap? {
+        usingNextFrameForImageCapture = false
+        return outputFramebuffer?.newImageFromFramebufferContents()
+    }
+
     open fun renderToTexture(vertices: FloatBuffer, textureCoordinates: FloatBuffer) {
         GLContext.setActiveShaderProgram(filterProgram)
 
@@ -118,6 +133,9 @@ open class Filter(
             TAG,
             "filter in:${inputFramebuffer.toString()} out:${outputFramebuffer.toString()}"
         )
+        if (usingNextFrameForImageCapture) {
+            outputFramebuffer?.lock()
+        }
 
         outputFramebuffer?.activate()
         setUniformsForProgram()

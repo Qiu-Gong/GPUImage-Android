@@ -3,6 +3,8 @@ package com.alien.gpuimage.sources
 import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLUtils
+import com.alien.gpuimage.Callback
+import com.alien.gpuimage.CallbackParam
 import com.alien.gpuimage.GLContext
 import com.alien.gpuimage.Size
 import com.alien.gpuimage.utils.Logger
@@ -68,23 +70,29 @@ class Picture : Output {
 
     fun processPicture() {
         runAsynchronously(Runnable {
-            targets.forEachIndexed { index, input ->
-                val textureIndices = targetTextureIndices[index]
-                input.setInputSize(pixelSizeOfImage, textureIndices)
-                input.setInputFramebuffer(outputFramebuffer, textureIndices)
-                input.newFrameReadyAtTime(System.currentTimeMillis(), textureIndices)
-            }
+            processRunnable.run()
+        })
+    }
+
+    fun processPicture(completion: Callback) {
+        runAsynchronously(Runnable {
+            processRunnable.run()
+            completion.function()
         })
     }
 
     fun processPictureSynchronously() {
         runSynchronously(Runnable {
-            targets.forEachIndexed { index, input ->
-                val textureIndices = targetTextureIndices[index]
-                input.setInputSize(pixelSizeOfImage, textureIndices)
-                input.setInputFramebuffer(outputFramebuffer, textureIndices)
-                input.newFrameReadyAtTime(System.currentTimeMillis(), textureIndices)
-            }
+            processRunnable.run()
+        })
+    }
+
+    fun processImageUpToFilter(finalFilterInChain: Output?, completion: CallbackParam<Bitmap?>) {
+        finalFilterInChain?.useNextFrameForImageCapture()
+        runAsynchronously(Runnable {
+            processRunnable.run()
+            val imageFromFilter = finalFilterInChain?.imageFromCurrentFramebufferWithOrientation()
+            completion.function(imageFromFilter)
         })
     }
 
