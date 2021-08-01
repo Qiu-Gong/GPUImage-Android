@@ -88,8 +88,8 @@ class Picture : Output {
     }
 
     fun processImageUpToFilter(finalFilterInChain: Output?, completion: CallbackParam<Bitmap?>) {
-        finalFilterInChain?.useNextFrameForImageCapture()
-        runSynchronously(Runnable {
+        runAsynchronously(Runnable {
+            finalFilterInChain?.useNextFrameForImageCapture()
             processRunnable.run()
             val imageFromFilter = finalFilterInChain?.imageFromCurrentFramebufferWithOrientation()
             completion.function(imageFromFilter)
