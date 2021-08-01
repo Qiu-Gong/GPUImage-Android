@@ -1,16 +1,17 @@
-package com.alien.gpuimage.egl;
+package com.alien.gpuimage.egl
 
-import android.graphics.SurfaceTexture;
-import android.view.Surface;
+import android.graphics.SurfaceTexture
+import android.view.Surface
 
 /**
  * Recordable EGL window surface.
- * <p>
+ *
+ *
  * It's good practice to explicitly release() the surface, preferably from a "finally" block.
  */
-public class WindowSurface extends EglSurfaceBase {
-    private Surface mSurface;
-    private boolean mReleaseSurface;
+class WindowSurface : EglSurfaceBase {
+    private var mSurface: Surface? = null
+    private var mReleaseSurface = false
 
     /**
      * Associates an EGL surface with the native window surface.
@@ -20,19 +21,17 @@ public class WindowSurface extends EglSurfaceBase {
      * manage the Surface themselves (e.g. if you release a SurfaceView's Surface, the
      * surfaceDestroyed() callback won't fire).
      */
-    public WindowSurface(EglCore eglCore, Surface surface, boolean releaseSurface) {
-        super(eglCore);
-        createWindowSurface(surface);
-        mSurface = surface;
-        mReleaseSurface = releaseSurface;
+    constructor(eglCore: EglCore?, surface: Surface?, releaseSurface: Boolean) : super(eglCore) {
+        createWindowSurface(surface)
+        mSurface = surface
+        mReleaseSurface = releaseSurface
     }
 
     /**
      * Associates an EGL surface with the SurfaceTexture.
      */
-    public WindowSurface(EglCore eglCore, SurfaceTexture surfaceTexture) {
-        super(eglCore);
-        createWindowSurface(surfaceTexture);
+    constructor(eglCore: EglCore?, surfaceTexture: SurfaceTexture?) : super(eglCore) {
+        createWindowSurface(surfaceTexture)
     }
 
     /**
@@ -41,13 +40,13 @@ public class WindowSurface extends EglSurfaceBase {
      * <p>
      * Does not require that the surface's EGL context be current.
      */
-    public void release() {
-        releaseEglSurface();
+    fun release() {
+        releaseEglSurface()
         if (mSurface != null) {
             if (mReleaseSurface) {
-                mSurface.release();
+                mSurface?.release()
             }
-            mSurface = null;
+            mSurface = null
         }
     }
 
@@ -64,11 +63,11 @@ public class WindowSurface extends EglSurfaceBase {
      * context somewhere, the create call will fail with complaints from the Surface
      * about already being connected.
      */
-    public void recreate(EglCore newEglCore) {
+    fun recreate(newEglCore: EglCore) {
         if (mSurface == null) {
-            throw new RuntimeException("not yet implemented for SurfaceTexture");
+            throw RuntimeException("not yet implemented for SurfaceTexture")
         }
-        mEglCore = newEglCore;          // switch to new context
-        createWindowSurface(mSurface);  // create new surface
+        mEglCore = newEglCore // switch to new context
+        createWindowSurface(mSurface) // create new surface
     }
 }
