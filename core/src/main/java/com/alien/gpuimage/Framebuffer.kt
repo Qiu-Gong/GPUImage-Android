@@ -13,7 +13,7 @@ class Framebuffer {
     companion object {
         private const val TAG = "Framebuffer"
 
-        var createCnt = 0
+        var createAllCount = 0
             private set
     }
 
@@ -53,7 +53,7 @@ class Framebuffer {
             generateFramebuffer()
         }
 
-        createCnt++
+        createAllCount++
     }
 
     constructor(width: Int, height: Int, inputTexture: Int) {
@@ -200,7 +200,7 @@ class Framebuffer {
     fun destroy() {
         Logger.d(TAG, "destroy framebufferId:$framebufferId textureId:$textureId")
         if (framebufferId > 0 || textureId > 0) {
-            createCnt--
+            createAllCount--
         }
 
         if (framebufferId > 0) {
