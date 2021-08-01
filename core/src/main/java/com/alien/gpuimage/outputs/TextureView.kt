@@ -69,10 +69,6 @@ class TextureView(context: Context, attrs: AttributeSet) :
         glView.callback = callback
     }
 
-    fun captureFrameToBitmap() {
-        glView.isCaptureFrame = true
-    }
-
     fun getImageRectF(): RectF {
         return glView.getImageRectF()
     }

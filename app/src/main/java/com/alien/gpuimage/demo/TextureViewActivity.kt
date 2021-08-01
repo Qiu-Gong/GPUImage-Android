@@ -71,7 +71,6 @@ class TextureViewActivity : AppCompatActivity() {
 
             override fun onViewDestroy() = Unit
             override fun onViewSwapToScreen() = Unit
-            override fun onCaptureFrameToBitmap(bitmap: Bitmap?) = Unit
         })
         textureView2?.setCallback(object : GLView.SurfaceViewCallback {
             override fun onViewCreate() {
@@ -80,7 +79,6 @@ class TextureViewActivity : AppCompatActivity() {
 
             override fun onViewDestroy() = Unit
             override fun onViewSwapToScreen() = Unit
-            override fun onCaptureFrameToBitmap(bitmap: Bitmap?) = Unit
         })
         textureView3?.setCallback(object : GLView.SurfaceViewCallback {
             override fun onViewCreate() {
@@ -89,7 +87,6 @@ class TextureViewActivity : AppCompatActivity() {
 
             override fun onViewDestroy() = Unit
             override fun onViewSwapToScreen() = Unit
-            override fun onCaptureFrameToBitmap(bitmap: Bitmap?) = Unit
         })
 
         findViewById<AppCompatSeekBar>(R.id.seekbar).setOnSeekBarChangeListener(object :

@@ -55,7 +55,6 @@ class TwoInputActivity : AppCompatActivity() {
 
             override fun onViewDestroy() = Unit
             override fun onViewSwapToScreen() = Unit
-            override fun onCaptureFrameToBitmap(bitmap: Bitmap?) = Unit
         })
     }
 

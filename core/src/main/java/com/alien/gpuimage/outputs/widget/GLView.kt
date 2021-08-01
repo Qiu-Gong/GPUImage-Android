@@ -70,13 +70,11 @@ class GLView : Input {
     private var imageVerticesBuffer: FloatBuffer? = null
 
     var callback: SurfaceViewCallback? = null
-    var isCaptureFrame: Boolean = false
 
     interface SurfaceViewCallback {
         fun onViewCreate()
         fun onViewDestroy()
         fun onViewSwapToScreen()
-        fun onCaptureFrameToBitmap(bitmap: Bitmap?)
     }
 
     private fun createProgram() {
@@ -204,17 +202,6 @@ class GLView : Input {
             imageVerticesBuffer
         )
 
-        if (isCaptureFrame) {
-            GLES20.glVertexAttribPointer(
-                inputTextureCoordinateAttribute, 2, GLES20.GL_FLOAT, false, 0,
-                DataBuffer.textureCoordinatesForRotation(inputRotation, false)
-            )
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
-            val bitmap = captureFrameToBitmap()
-            callback?.onCaptureFrameToBitmap(bitmap)
-            isCaptureFrame = false
-        }
-
         GLES20.glVertexAttribPointer(
             inputTextureCoordinateAttribute, 2, GLES20.GL_FLOAT, false, 0,
             DataBuffer.textureCoordinatesForRotation(inputRotation, true)
@@ -264,27 +251,6 @@ class GLView : Input {
             // 销毁
             callback?.onViewDestroy()
         })
-    }
-
-    /**
-     * 截图当前画面转Bitmap
-     */
-    private fun captureFrameToBitmap(): Bitmap? {
-        if (currentViewSize == null) return null
-
-        val width = currentViewSize!!.width
-        val height = currentViewSize!!.height
-        val byteBuffer = ByteBuffer.allocateDirect(width * height * 4)
-        byteBuffer.order(ByteOrder.LITTLE_ENDIAN)
-        byteBuffer.rewind()
-        byteBuffer.position(0)
-
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0)
-        GLES20.glReadPixels(0, 0, width, height, 6408, 5121, byteBuffer)
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        bitmap?.copyPixelsFromBuffer(byteBuffer)
-
-        return bitmap
     }
 
     fun getImageRectF(): RectF {
