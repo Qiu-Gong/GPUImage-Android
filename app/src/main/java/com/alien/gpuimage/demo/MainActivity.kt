@@ -1,6 +1,7 @@
 package com.alien.gpuimage.demo
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -9,7 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.alien.gpuimage.GLContext
-import com.leon.lfilepickerlibrary.LFilePicker
+import com.zhihu.matisse.Matisse
+import com.zhihu.matisse.MimeType
+import com.zhihu.matisse.engine.impl.GlideEngine
+import com.zhihu.matisse.filter.Filter
+import com.zhihu.matisse.internal.entity.IncapableCause
+import com.zhihu.matisse.internal.entity.Item
+import com.zhihu.matisse.internal.utils.PhotoMetadataUtils
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -94,15 +101,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun chooserFile() {
-        LFilePicker().withActivity(this)
-            .withRequestCode(FILE_REQUEST_CODE)
-            .withStartPath("/storage/emulated/0/DCIM/")
-            .withMutilyMode(false)
-            .withFileFilter(
-                if (type == R.id.select_video || type == R.id.exo) arrayOf(".mp4")
-                else arrayOf(".png", ".jpeg", ".JPG")
-            )
-            .start()
+        Matisse.from(this@MainActivity)
+            .choose(MimeType.ofImage())
+            .theme(R.style.Matisse_Dracula)
+            .countable(false)
+            .addFilter(GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
+            .maxSelectable(1)
+            .originalEnable(true)
+            .maxOriginalSize(10)
+            .imageEngine(GlideEngine())
+            .forResult(FILE_REQUEST_CODE)
     }
 
     override fun onRequestPermissionsResult(
@@ -122,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             if (requestCode == FILE_REQUEST_CODE) {
-                val path = data?.getStringArrayListExtra("paths")?.get(0)
+                val path = Matisse.obtainPathResult(data)[0]
                 if (type == R.id.select_picture) {
                     ImageActivity.startActivity(this, path)
                 } else if (type == R.id.select_surface_view) {
@@ -139,6 +147,31 @@ class MainActivity : AppCompatActivity() {
                     ExoplayerActivity.startActivity(this, path)
                 }
             }
+        }
+    }
+
+    private class GifSizeFilter constructor(
+        private val mMinWidth: Int,
+        private val mMinHeight: Int,
+        private val mMaxSize: Int
+    ) : Filter() {
+
+        public override fun constraintTypes(): Set<MimeType> {
+            return HashSet<MimeType>().apply { add(MimeType.GIF) }
+        }
+
+        override fun filter(context: Context, item: Item): IncapableCause? {
+            if (!needFiltering(context, item)) return null
+            val size = PhotoMetadataUtils.getBitmapBound(context.contentResolver, item.contentUri)
+            return if (size.x < mMinWidth || size.y < mMinHeight || item.size > mMaxSize) {
+                IncapableCause(
+                    IncapableCause.DIALOG,
+                    context.getString(
+                        R.string.error_gif, mMinWidth,
+                        PhotoMetadataUtils.getSizeInMB(mMaxSize.toLong()).toString()
+                    )
+                )
+            } else null
         }
     }
 }

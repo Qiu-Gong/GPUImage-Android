@@ -30,6 +30,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 dependencies {
@@ -39,9 +45,12 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompat"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout"
     implementation "com.google.android.material:material:$material"
-    implementation 'com.leon:lfilepickerlibrary:1.8.0'
-
     implementation "com.google.android.exoplayer:exoplayer-core:2.10.5"
+
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation(name: 'matisse-release', ext: 'aar')
+    implementation 'it.sephiroth.android.library.imagezoom:library:1.0.4'
+
 //    implementation 'com.alien.gpuimage:gpuimage:1.0.0-09'
     implementation project(':core')
 }
