@@ -140,6 +140,6 @@ class GLProgram() {
     }
 
     override fun toString(): String {
-        return "program:$program attributes:${attributes} programReferenceCount${programReferenceCount}"
+        return "program:$program attributes:${attributes} programReferenceCount:${programReferenceCount}"
     }
 }
