@@ -22,11 +22,10 @@ class TextureView(context: Context, attrs: AttributeSet) :
     }
 
     private val glView: GLView = GLView()
-    private var fillModeType = GLView.FillModeType.FillModePreserveAspectRatio
 
     init {
-        val a = context.obtainStyledAttributes(attrs, R.styleable.TextureView, 0, 0)
-        fillModeType = when (a.getInt(
+        val array = context.obtainStyledAttributes(attrs, R.styleable.TextureView, 0, 0)
+        val fillModeType = when (array.getInt(
             R.styleable.TextureView_fillModeType,
             GLView.FillModeType.FillModePreserveAspectRatio.ordinal
         )) {
@@ -35,7 +34,8 @@ class TextureView(context: Context, attrs: AttributeSet) :
             2 -> GLView.FillModeType.FillModePreserveAspectRatioAndFill
             else -> GLView.FillModeType.FillModePreserveAspectRatio
         }
-        a.recycle()
+        array.recycle()
+
         glView.fillMode = fillModeType
         this.surfaceTextureListener = SurfaceTextureCallbackImpl()
     }
