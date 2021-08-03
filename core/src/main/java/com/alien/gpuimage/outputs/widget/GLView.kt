@@ -1,6 +1,5 @@
 package com.alien.gpuimage.outputs.widget
 
-import android.graphics.Bitmap
 import android.graphics.RectF
 import android.graphics.SurfaceTexture
 import android.opengl.GLES20
@@ -9,8 +8,6 @@ import com.alien.gpuimage.*
 import com.alien.gpuimage.egl.WindowSurface
 import com.alien.gpuimage.outputs.Input
 import com.alien.gpuimage.utils.Logger
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 import java.nio.FloatBuffer
 import kotlin.math.abs
 
@@ -65,9 +62,9 @@ class GLView : Input {
 
     private var backgroundColor: BackgroundColor = BackgroundColor(0.0f, 0.0f, 0.0f, 0.0f)
     private var currentViewSize: Size? = null
-    private var fillMode: FillModeType = FillModeType.FillModePreserveAspectRatio
     private var imageVertices: FloatArray = FloatArray(8)
     private var imageVerticesBuffer: FloatBuffer? = null
+    var fillMode: FillModeType = FillModeType.FillModePreserveAspectRatio
 
     var callback: SurfaceViewCallback? = null
 
