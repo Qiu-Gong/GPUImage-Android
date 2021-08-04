@@ -15,6 +15,7 @@ class CropFilter : Filter() {
     private val originallySuppliedInputSize: Size = Size()
     private val cropTextureCoordinates: FloatBuffer =
         DataBuffer.createFloatBuffer(floatArrayOf(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f))
+    private var vertices = DataBuffer.IMAGE_VERTICES
 
     override fun setInputSize(inputSize: Size?, textureIndex: Int) {
         val rotatedSize = rotatedSize(inputSize!!, textureIndex)
@@ -38,7 +39,7 @@ class CropFilter : Filter() {
     }
 
     override fun newFrameReadyAtTime(time: Long, textureIndex: Int) {
-        renderToTexture(DataBuffer.IMAGE_VERTICES, cropTextureCoordinates)
+        renderToTexture(vertices, cropTextureCoordinates)
         informTargetsAboutNewFrameAtTime(time)
     }
 
@@ -52,7 +53,16 @@ class CropFilter : Filter() {
         )
 
         cropRegion.set(rectF)
+        vertices = DataBuffer.IMAGE_VERTICES
         calculateCropTextureCoordinates()
+    }
+
+    /**
+     * 设置裁剪框
+     */
+    fun setCropRegion(floatArray: FloatArray, rectF: RectF) {
+        setCropRegion(rectF)
+        vertices = DataBuffer.createFloatBuffer(floatArray)
     }
 
     private fun calculateCropTextureCoordinates() {
