@@ -5,6 +5,7 @@
             <enum name="FillModeStretch" value="0" />
             <enum name="FillModePreserveAspectRatio" value="1" />
             <enum name="FillModePreserveAspectRatioAndFill" value="2" />
+            <enum name="FillModeFitCenter" value="3" />
         </attr>
     </declare-styleable>
 </resources>

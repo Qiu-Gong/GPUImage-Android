@@ -32,6 +32,7 @@ class TextureView(context: Context, attrs: AttributeSet) :
             0 -> GLView.FillModeType.FillModeStretch
             1 -> GLView.FillModeType.FillModePreserveAspectRatio
             2 -> GLView.FillModeType.FillModePreserveAspectRatioAndFill
+            3 -> GLView.FillModeType.FillModeFitCenter
             else -> GLView.FillModeType.FillModePreserveAspectRatio
         }
         array.recycle()

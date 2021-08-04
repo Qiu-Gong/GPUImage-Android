@@ -47,7 +47,8 @@ class GLView : Input {
     enum class FillModeType {
         FillModeStretch,     // 全屏
         FillModePreserveAspectRatio,  // 合适比例
-        FillModePreserveAspectRatioAndFill  // 全屏合适比例
+        FillModePreserveAspectRatioAndFill,  // 全屏合适比例
+        FillModeFitCenter, // 居中裁剪
     }
 
     private var inputSize: Size? = null
@@ -116,6 +117,15 @@ class GLView : Input {
             FillModeType.FillModePreserveAspectRatioAndFill -> {
                 widthScaling = currentViewSize!!.height.toFloat() / insetSize.height.toFloat()
                 heightScaling = currentViewSize!!.width.toFloat() / insetSize.width.toFloat()
+            }
+            FillModeType.FillModeFitCenter -> {
+                if (insetSize.width >= insetSize.height) {
+                    widthScaling = insetSize.width.toFloat() / currentViewSize!!.width.toFloat()
+                    heightScaling = insetSize.height.toFloat() / currentViewSize!!.height.toFloat()
+                } else {
+                    widthScaling = currentViewSize!!.height.toFloat() / insetSize.height.toFloat()
+                    heightScaling = currentViewSize!!.width.toFloat() / insetSize.width.toFloat()
+                }
             }
         }
         val float = floatArrayOf(
