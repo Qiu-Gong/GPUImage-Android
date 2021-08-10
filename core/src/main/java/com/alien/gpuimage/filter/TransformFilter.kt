@@ -94,6 +94,7 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
         } else {
             val inputSize = getInputSize()!!
             val normalizedHeight = inputSize.height.toFloat() / inputSize.width.toFloat()
+            setupFilterForSize(inputSize)
 
             if (anchorTopLeft) {
                 adjustedVerticesAnchorTL[0] = 0.0f
