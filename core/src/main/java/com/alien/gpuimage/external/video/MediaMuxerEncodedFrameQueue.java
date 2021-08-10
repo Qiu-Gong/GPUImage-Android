@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.media.MediaCodec;
 import android.media.MediaMuxer;
 import android.os.Build;
-import android.util.Log;
 
 import com.alien.gpuimage.utils.Logger;
 

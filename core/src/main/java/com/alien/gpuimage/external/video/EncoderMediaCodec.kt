@@ -2,8 +2,8 @@ package com.alien.gpuimage.external.video
 
 import android.media.MediaCodec
 import android.media.MediaFormat
-import android.util.Log
 import android.view.Surface
+import com.alien.gpuimage.utils.Logger
 import java.nio.ByteBuffer
 
 class EncoderMediaCodec(
@@ -34,7 +34,7 @@ class EncoderMediaCodec(
 
     override fun prepare(format: MediaFormat?, texId: Int?) {
         if (state.get() != STATE_RELEASE) {
-            Log.e(TAG, "prepare() Error")
+            Logger.e(TAG, "prepare() Error")
             return
         }
 
@@ -47,26 +47,26 @@ class EncoderMediaCodec(
         surface = mediaCodec?.createInputSurface()
         callback?.onPrepared(surface)
         if (ENABLE_LOG) {
-            Log.d(TAG, "prepare()")
+            Logger.d(TAG, "prepare()")
         }
     }
 
     override fun start() {
         if (state.get() != STATE_PREPARED) {
-            Log.e(TAG, "start() Error")
+            Logger.e(TAG, "start() Error")
             return
         }
 
         mediaCodec?.start()
         state.set(STATE_ENCODING)
         if (ENABLE_LOG) {
-            Log.d(TAG, "start()")
+            Logger.d(TAG, "start()")
         }
     }
 
     override fun drain() {
         if (state.get() != STATE_ENCODING && state.get() != STATE_STOPPING) {
-            Log.e(TAG, "drain() Error state:${state.get()}")
+            Logger.e(TAG, "drain() Error state:${state.get()}")
             return
         }
 
@@ -74,7 +74,7 @@ class EncoderMediaCodec(
             val bufferInfo = MediaCodec.BufferInfo()
             val index = mediaCodec?.dequeueOutputBuffer(bufferInfo, OUTPUT_TIMEOUT_US)!!
             if (ENABLE_LOG) {
-                Log.d(
+                Logger.d(
                     TAG, "dequeueOutputBuffer status:" + index +
                             " mBufferInfo => flag:" + bufferInfo.flags +
                             " size:" + bufferInfo.size +
@@ -84,7 +84,7 @@ class EncoderMediaCodec(
 
             if (index == MediaCodec.INFO_TRY_AGAIN_LATER) {
                 if (ENABLE_LOG) {
-                    Log.d(TAG, "drain info try again later")
+                    Logger.d(TAG, "drain info try again later")
                 }
                 if (state.get() != STATE_STOPPING) {
                     break
@@ -92,13 +92,13 @@ class EncoderMediaCodec(
 
             } else if (index == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
                 if (ENABLE_LOG) {
-                    Log.d(TAG, "drain info output format changed")
+                    Logger.d(TAG, "drain info output format changed")
                 }
                 callback?.onOutputFormatChanged(mediaCodec?.outputFormat)
                 break
 
             } else if (index < 0) {
-                Log.w(TAG, "unexpected result from encoder.dequeueOutputBuffer: $index")
+                Logger.w(TAG, "unexpected result from encoder.dequeueOutputBuffer: $index")
 
             } else {
                 try {
@@ -109,7 +109,7 @@ class EncoderMediaCodec(
 
                     if ((bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
                         if (ENABLE_LOG) {
-                            Log.d(TAG, "ignoring BUFFER_FLAG_CODEC_CONFIG")
+                            Logger.d(TAG, "ignoring BUFFER_FLAG_CODEC_CONFIG")
                         }
                         bufferInfo.size = 0
                     }
@@ -123,10 +123,10 @@ class EncoderMediaCodec(
                     mediaCodec?.releaseOutputBuffer(index, false)
                     if ((bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) {
                         if (ENABLE_LOG) {
-                            Log.d(TAG, "drain buffer flag end of stream")
+                            Logger.d(TAG, "drain buffer flag end of stream")
                         }
                         if (state.get() != STATE_STOPPING) {
-                            Log.e(TAG, "reached end of stream unexpectedly")
+                            Logger.e(TAG, "reached end of stream unexpectedly")
                         }
                         state.set(STATE_STOPPED)
                         callback?.onFinish()
@@ -135,7 +135,7 @@ class EncoderMediaCodec(
                     }
 
                 } catch (e: Exception) {
-                    Log.e(TAG, "drain Exception")
+                    Logger.e(TAG, "drain Exception")
                     e.printStackTrace()
                 }
             }
@@ -144,20 +144,20 @@ class EncoderMediaCodec(
 
     override fun stop() {
         if (ENABLE_LOG) {
-            Log.d(TAG, "stop() called")
+            Logger.d(TAG, "stop() called")
         }
         if (state.get() == STATE_ENCODING) {
             mediaCodec?.signalEndOfInputStream()
             state.set(STATE_STOPPING)
         }
         if (ENABLE_LOG) {
-            Log.d(TAG, "stop() end")
+            Logger.d(TAG, "stop() end")
         }
     }
 
     override fun release() {
         if (ENABLE_LOG) {
-            Log.d(TAG, "release() called")
+            Logger.d(TAG, "release() called")
         }
         if (state.get() != STATE_STOPPED) {
             return
@@ -168,12 +168,12 @@ class EncoderMediaCodec(
             mediaCodec?.release()
             mediaCodec = null
         } catch (e: Exception) {
-            Log.e(TAG, "stop video encoder throw exception")
+            Logger.e(TAG, "stop video encoder throw exception")
         }
 
         state.set(STATE_RELEASE)
         if (ENABLE_LOG) {
-            Log.d(TAG, "release() end")
+            Logger.d(TAG, "release() end")
         }
     }
 

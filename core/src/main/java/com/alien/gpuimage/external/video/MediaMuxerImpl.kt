@@ -5,7 +5,7 @@ import android.media.MediaFormat
 import android.media.MediaMuxer
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.Log
+import com.alien.gpuimage.utils.Logger
 import java.nio.ByteBuffer
 
 /**
@@ -47,7 +47,7 @@ class MediaMuxerImpl(outputPath: String) : IMediaMuxer {
     override fun addAudioTrack(format: MediaFormat): Int {
         audioTrack = muxer?.addTrack(format) ?: -1
         if (BaseMediaCodec.ENABLE_LOG) {
-            Log.d(TAG, "addAudioTrack() called:$audioTrack")
+            Logger.d(TAG, "addAudioTrack() called:$audioTrack")
         }
         return audioTrack
     }
@@ -57,7 +57,7 @@ class MediaMuxerImpl(outputPath: String) : IMediaMuxer {
             videoTrack = muxer?.addTrack(it) ?: -1
         }
         if (BaseMediaCodec.ENABLE_LOG) {
-            Log.d(TAG, "addVideoTrack() called:$videoTrack")
+            Logger.d(TAG, "addVideoTrack() called:$videoTrack")
         }
         videoCache.setTrackIndex(videoTrack)
         return videoTrack

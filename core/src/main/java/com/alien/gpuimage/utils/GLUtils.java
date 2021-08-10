@@ -2,7 +2,6 @@ package com.alien.gpuimage.utils;
 
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
-import android.util.Log;
 
 import androidx.annotation.Keep;
 
@@ -25,7 +24,7 @@ public class GLUtils {
 
         int fboStatus = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
         if (fboStatus != GLES20.GL_FRAMEBUFFER_COMPLETE) {
-            Log.e("GLUtils", "initFBO failed, status: " + fboStatus);
+            Logger.e("GLUtils", "initFBO failed, status: " + fboStatus);
         }
         Bitmap bmp = readFboToBitmap(fbo[0], width, height);
         GLES20.glDeleteFramebuffers(1, fbo, 0);
