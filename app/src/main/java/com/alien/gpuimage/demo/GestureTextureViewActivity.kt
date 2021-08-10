@@ -5,7 +5,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.alien.gpuimage.external.gesture.ViewProxyGesture
+import com.alien.gpuimage.external.gesture.TextureViewGesture
 import com.alien.gpuimage.outputs.TextureView
 import com.alien.gpuimage.outputs.widget.GLView
 import com.alien.gpuimage.sources.Picture
@@ -26,8 +26,8 @@ class GestureTextureViewActivity : AppCompatActivity() {
     private var textureView: TextureView? = null
     private var picture: Picture? = null
 
-    private val textureViewGestureHelper: ViewProxyGesture by lazy {
-        ViewProxyGesture(this.baseContext, textureView!!)
+    private val textureTextureViewGestureHelper: TextureViewGesture by lazy {
+        TextureViewGesture(this.baseContext, textureView!!)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +47,7 @@ class GestureTextureViewActivity : AppCompatActivity() {
         textureView?.setCallback(object : GLView.SurfaceViewCallback {
             override fun onViewCreate() {
                 picture?.processPicture()
-                textureViewGestureHelper.initViewCreate()
+                textureTextureViewGestureHelper.initViewCreate()
             }
 
             override fun onViewDestroy() = Unit
@@ -59,6 +59,6 @@ class GestureTextureViewActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         picture?.release()
-        textureViewGestureHelper.cancelAllAnimations()
+        textureTextureViewGestureHelper.cancelAllAnimations()
     }
 }

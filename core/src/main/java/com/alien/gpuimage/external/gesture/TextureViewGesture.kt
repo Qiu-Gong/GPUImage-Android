@@ -4,22 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Matrix
 import android.graphics.RectF
-import android.util.Log
 import android.view.MotionEvent
 import androidx.annotation.IntRange
 import com.alien.gpuimage.outputs.TextureView
-import com.alien.gpuimage.utils.getCenterArray
-import com.alien.gpuimage.utils.getCornersArray
-import com.alien.gpuimage.utils.getRectSidesFromCorners
-import com.alien.gpuimage.utils.trapToRect
+import com.alien.gpuimage.utils.*
 import kotlin.math.*
 
 
 /**
- *
+ * TextureView 手势类
  */
 @SuppressLint("ClickableViewAccessibility")
-class ViewProxyGesture(context: Context, private val textureView: TextureView) {
+class TextureViewGesture(context: Context, private val textureView: TextureView) {
 
     companion object {
         private const val TAG = "ViewProxyGesture"
@@ -36,6 +32,7 @@ class ViewProxyGesture(context: Context, private val textureView: TextureView) {
     private val currentImageCorners = FloatArray(8)
     private val currentImageCenter = FloatArray(2)
     private val matrixValues = FloatArray(9)
+
     private val gestureHelper: GestureHelper by lazy {
         GestureHelper.create(context, onGestureListener)
     }
@@ -46,12 +43,12 @@ class ViewProxyGesture(context: Context, private val textureView: TextureView) {
         }
 
         override fun onScale(deltaScale: Float, px: Float, py: Float, e: MotionEvent) {
-            Log.d(TAG, "onScale: $deltaScale")
+            Logger.d(TAG, "onScale: $deltaScale")
             postScale(deltaScale, px, py)
         }
 
         override fun onTranslate(deltaX: Float, deltaY: Float, e1: MotionEvent, e2: MotionEvent) {
-            Log.d(TAG, "onTranslate: [$deltaX,$deltaY]")
+            Logger.d(TAG, "onTranslate: [$deltaX,$deltaY]")
             postTranslate(deltaX, deltaY)
         }
 
@@ -61,7 +58,7 @@ class ViewProxyGesture(context: Context, private val textureView: TextureView) {
             distanceX: Float,
             distanceY: Float
         ) {
-            Log.d(TAG, "onDoubleTranslate: [$distanceX,$distanceY]")
+            Logger.d(TAG, "onDoubleTranslate: [$distanceX,$distanceY]")
             postTranslate(distanceX, distanceY)
         }
 
@@ -80,12 +77,8 @@ class ViewProxyGesture(context: Context, private val textureView: TextureView) {
 
     fun initViewCreate() {
         viewRectF.set(0F, 0F, textureView.width.toFloat(), textureView.height.toFloat())
-        val initialImageRect = RectF(
-            0F, 0F,
-            textureView.width.toFloat(), textureView.height.toFloat()
-        )
-        initialImageCorners = initialImageRect.getCornersArray()
-        initialImageCenter = initialImageRect.getCenterArray()
+        initialImageCorners = viewRectF.getCornersArray()
+        initialImageCenter = viewRectF.getCenterArray()
     }
 
     fun cancelAllAnimations() {
