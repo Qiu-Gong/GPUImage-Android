@@ -66,7 +66,7 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
 
     init {
         orthographicMatrix = FloatArray(16)
-        Matrix.orthoM(orthographicMatrix, 0, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f)
+        loadOrthoMatrix(orthographicMatrix, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f)
         transform3D = FloatArray(16)
         Matrix.setIdentityM(transform3D, 0)
 
@@ -137,9 +137,8 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
 
     private fun setupFilterForSize(inputSize: Size?) {
         if (!ignoreAspectRatio && inputSize != null) {
-            Matrix.orthoM(
+            loadOrthoMatrix(
                 orthographicMatrix,
-                0,
                 -1.0f,
                 1.0f,
                 -1.0f * inputSize.height.toFloat() / inputSize.width.toFloat(),
@@ -163,7 +162,7 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
     fun setIgnoreAspectRatio(ignoreAspectRatio: Boolean) {
         this.ignoreAspectRatio = ignoreAspectRatio
         if (this.ignoreAspectRatio) {
-            Matrix.orthoM(orthographicMatrix, 0, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f)
+            loadOrthoMatrix(orthographicMatrix, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f)
             setUniformMatrix4f(orthographicMatrix!!, orthographicMatrixUniform, filterProgram)
         } else {
             setupFilterForSize(getInputSize())
@@ -181,5 +180,45 @@ class TransformFilter : Filter(vertexShader = VERTEX_SHADER) {
 
     fun anchorTopLeft(): Boolean {
         return anchorTopLeft
+    }
+
+    private fun loadOrthoMatrix(
+        matrix: FloatArray?,
+        left: Float, right: Float, bottom: Float, top: Float,
+        near: Float, far: Float
+    ) {
+        val r_l = right - left
+        val t_b = top - bottom
+        val f_n = far - near
+        var tx = -(right + left) / (right - left)
+        var ty = -(top + bottom) / (top - bottom)
+        val tz = -(far + near) / (far - near)
+
+        var scale = 2.0f
+        if (anchorTopLeft) {
+            scale = 4.0f
+            tx = -1.0f
+            ty = -1.0f
+        }
+
+        matrix?.set(0, scale / r_l)
+        matrix?.set(1, 0.0f)
+        matrix?.set(2, 0.0f)
+        matrix?.set(3, tx)
+
+        matrix?.set(4, 0.0f)
+        matrix?.set(5, scale / t_b)
+        matrix?.set(6, 0.0f)
+        matrix?.set(7, ty)
+
+        matrix?.set(8, 0.0f)
+        matrix?.set(9, 0.0f)
+        matrix?.set(10, scale / f_n)
+        matrix?.set(11, tz)
+
+        matrix?.set(12, 0.0f)
+        matrix?.set(13, 0.0f)
+        matrix?.set(14, 0.0f)
+        matrix?.set(15, 1.0f)
     }
 }
