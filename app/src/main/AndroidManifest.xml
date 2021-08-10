@@ -28,6 +28,7 @@
         <activity android:name=".TransformActivity" />
         <activity android:name=".TwoInputActivity" />
         <activity android:name=".ExoplayerActivity" />
+        <activity android:name=".GestureTextureViewActivity"/>
     </application>
 
 </manifest>

@@ -64,6 +64,10 @@ class MainActivity : AppCompatActivity() {
             clickListener(it.id)
         }
 
+        findViewById<View>(R.id.gesture).setOnClickListener {
+            clickListener(it.id)
+        }
+
         findViewById<View>(R.id.memory_print).setOnClickListener {
             GLContext.print()
         }
@@ -145,6 +149,8 @@ class MainActivity : AppCompatActivity() {
                     TwoInputActivity.startActivity(this, path)
                 } else if (type == R.id.exo) {
                     ExoplayerActivity.startActivity(this, path)
+                } else if (type == R.id.gesture) {
+                    GestureTextureViewActivity.startActivity(this, path)
                 }
             }
         }
