@@ -116,8 +116,8 @@ class BitmapView : Input {
     /**
      * bitmap 写到纹理
      */
-    fun writeBitmapToTexture(bitmap: Bitmap?) {
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, inputFramebuffer?.textureId ?: 0)
+    fun writeBitmapToTexture(bitmap: Bitmap?, framebuffer: Framebuffer?) {
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, framebuffer?.textureId ?: 0)
         GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, bitmap)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
     }
