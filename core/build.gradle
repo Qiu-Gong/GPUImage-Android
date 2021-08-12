@@ -47,6 +47,6 @@ dependencies {
 project.ext {
     mavenGroupId = "com.alien.gpuimage"
     mavenArtifactId = "gpuimage"
-    mavenVersion = "1.0.0-38"
+    mavenVersion = "1.0.0-39"
 }
-apply from: file("../maven2.gradle")
+apply from: file("../maven.gradle")
