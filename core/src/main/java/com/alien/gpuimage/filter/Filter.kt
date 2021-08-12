@@ -246,4 +246,57 @@ open class Filter(
             })
         })
     }
+
+    fun copyFrameBuffer(inputFramebuffer: Framebuffer?, outputSize: Size?): Framebuffer? {
+        GLContext.setActiveShaderProgram(filterProgram)
+
+        val copyFramebuffer =
+            GLContext.sharedFramebufferCache()
+                ?.fetchFramebuffer(outputSize, false, outputTextureOptions)
+
+        copyFramebuffer?.activate()
+        setUniformsForProgram()
+
+        GLES20.glClearColor(
+            backgroundColor.r, backgroundColor.g,
+            backgroundColor.b, backgroundColor.a
+        )
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+
+        // 激活纹理
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE2)
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, inputFramebuffer?.textureId ?: 0)
+        GLES20.glUniform1i(inputImageTextureUniform, 2)
+
+        // GL坐标
+        GLES20.glEnableVertexAttribArray(positionAttribute)
+        GLES20.glVertexAttribPointer(
+            positionAttribute,
+            2,
+            GLES20.GL_FLOAT,
+            false,
+            0,
+            DataBuffer.IMAGE_VERTICES
+        )
+
+        // 纹理坐标
+        GLES20.glEnableVertexAttribArray(inputTextureCoordinateAttribute)
+        GLES20.glVertexAttribPointer(
+            inputTextureCoordinateAttribute,
+            2,
+            GLES20.GL_FLOAT,
+            false,
+            0,
+            DataBuffer.textureCoordinatesForRotation(getInputRotation(), false)
+        )
+
+        // 绘制
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
+
+        // 关闭 属性
+        GLES20.glDisableVertexAttribArray(positionAttribute)
+        GLES20.glDisableVertexAttribArray(inputTextureCoordinateAttribute)
+
+        return copyFramebuffer
+    }
 }
