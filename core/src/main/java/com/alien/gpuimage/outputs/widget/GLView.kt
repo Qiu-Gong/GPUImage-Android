@@ -119,7 +119,7 @@ class GLView : Input {
                 heightScaling = currentViewSize!!.width.toFloat() / insetSize.width.toFloat()
             }
             FillModeType.FillModeFitCenter -> {
-                if (insetSize.width >= insetSize.height) {
+                if ((insetSize.width.toFloat() / insetSize.height.toFloat()) >= (1f - 0.005f)) {
                     widthScaling = insetSize.width.toFloat() / currentViewSize!!.width.toFloat()
                     heightScaling = insetSize.height.toFloat() / currentViewSize!!.height.toFloat()
                 } else {
