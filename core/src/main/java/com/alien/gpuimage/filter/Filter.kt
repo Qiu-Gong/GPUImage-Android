@@ -57,7 +57,7 @@ open class Filter(
     protected val backgroundColor: BackgroundColor = BackgroundColor()
     private val uniformStateRestoration = HashMap<Int, Callback>()
 
-    private var usingNextFrameForImageCapture = false
+    protected var usingNextFrameForImageCapture = false
 
     init {
         this.runSynchronouslyGpu(Runnable {
