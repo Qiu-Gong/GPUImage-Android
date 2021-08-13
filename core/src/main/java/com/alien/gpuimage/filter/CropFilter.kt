@@ -5,6 +5,7 @@ import com.alien.gpuimage.DataBuffer
 import com.alien.gpuimage.RotationMode
 import com.alien.gpuimage.Size
 import java.nio.FloatBuffer
+import kotlin.math.roundToInt
 
 /**
  * 裁剪滤镜
@@ -22,8 +23,8 @@ class CropFilter : Filter() {
         originallySuppliedInputSize.setSize(rotatedSize)
 
         val scaledSize = Size()
-        scaledSize.width = (rotatedSize.width * cropRegion.width()).toInt()
-        scaledSize.height = (rotatedSize.height * cropRegion.height()).toInt()
+        scaledSize.width = (rotatedSize.width * cropRegion.width()).roundToInt()
+        scaledSize.height = (rotatedSize.height * cropRegion.height()).roundToInt()
         if (scaledSize.width == 0 && scaledSize.height == 0) {
             super.setInputSize(scaledSize, textureIndex)
         } else if (!(getInputSize()?.width == scaledSize.width
