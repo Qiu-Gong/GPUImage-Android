@@ -272,10 +272,4 @@ class GLView : Input {
 
         return RectF(left, top, right, bottom)
     }
-
-    fun getImageScaling(): SizeF {
-        val widthScaling = abs(imageVertices[0])
-        val heightScaling = abs(imageVertices[1])
-        return SizeF(widthScaling, heightScaling)
-    }
 }

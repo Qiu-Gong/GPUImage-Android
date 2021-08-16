@@ -85,8 +85,4 @@ class TextureView(context: Context, attrs: AttributeSet) :
     fun getImageRectF(): RectF {
         return glView.getImageRectF()
     }
-
-    fun getImageScaling(): SizeF {
-        return glView.getImageScaling()
-    }
 }
