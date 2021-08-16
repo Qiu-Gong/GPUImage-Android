@@ -192,10 +192,7 @@ class GLOesTexture : Output() {
                 oesTexture = -1
             }
 
-            outputFramebuffer?.let {
-                GLContext.sharedFramebufferCache()?.returnFramebuffer(it)
-            }
-
+            outputFramebuffer?.unlock()
             GLContext.deleteProgram(oesProgram)
         })
     }

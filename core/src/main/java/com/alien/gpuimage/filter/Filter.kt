@@ -107,9 +107,7 @@ open class Filter(
 
     override fun release() {
         runSynchronouslyGpu(Runnable {
-            outputFramebuffer?.let {
-                GLContext.sharedFramebufferCache()?.returnFramebuffer(it)
-            }
+            outputFramebuffer?.unlock()
             GLContext.deleteProgram(filterProgram)
         })
     }
