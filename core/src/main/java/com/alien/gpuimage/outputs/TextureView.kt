@@ -4,12 +4,10 @@ import android.content.Context
 import android.graphics.RectF
 import android.graphics.SurfaceTexture
 import android.util.AttributeSet
-import com.alien.gpuimage.Framebuffer
-import com.alien.gpuimage.R
-import com.alien.gpuimage.RotationMode
-import com.alien.gpuimage.Size
+import com.alien.gpuimage.*
 import com.alien.gpuimage.outputs.widget.GLView
 import com.alien.gpuimage.utils.Logger
+import kotlin.math.abs
 
 /**
  * TextureView，可以做动画效果，没有层级问题，相对耗电
@@ -86,5 +84,9 @@ class TextureView(context: Context, attrs: AttributeSet) :
 
     fun getImageRectF(): RectF {
         return glView.getImageRectF()
+    }
+
+    fun getImageScaling(): SizeF {
+        return glView.getImageScaling()
     }
 }

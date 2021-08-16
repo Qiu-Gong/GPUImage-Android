@@ -7,6 +7,7 @@ import android.view.SurfaceHolder
 import com.alien.gpuimage.Framebuffer
 import com.alien.gpuimage.RotationMode
 import com.alien.gpuimage.Size
+import com.alien.gpuimage.SizeF
 import com.alien.gpuimage.outputs.widget.GLView
 import com.alien.gpuimage.utils.Logger
 
@@ -65,5 +66,9 @@ open class SurfaceView(context: Context, attrs: AttributeSet) :
 
     fun getImageRectF(): RectF {
         return glView.getImageRectF()
+    }
+
+    fun getImageScaling(): SizeF {
+        return glView.getImageScaling()
     }
 }

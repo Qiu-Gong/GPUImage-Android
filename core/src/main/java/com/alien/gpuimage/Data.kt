@@ -42,6 +42,8 @@ data class Size(var width: Int = 0, var height: Int = 0) {
     }
 }
 
+data class SizeF(var width: Float = 0f, var height: Float = 0f)
+
 data class TextureAttributes(
     var minFilter: Int = GLES20.GL_LINEAR,
     var magFilter: Int = GLES20.GL_LINEAR,
