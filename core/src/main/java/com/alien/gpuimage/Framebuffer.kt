@@ -178,7 +178,7 @@ class Framebuffer {
         }
 
         check(framebufferReferenceCount > 0) {
-            "Tried to overrelease a framebuffer, did you forget to call -useNextFrameForImageCapture before using -imageFromCurrentFramebuffer?"
+            "Tried to overrelease a framebuffer, ${toString()}"
         }
 
         framebufferReferenceCount--
