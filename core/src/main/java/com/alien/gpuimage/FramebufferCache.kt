@@ -130,7 +130,7 @@ class FramebufferCache {
     }
 
     override fun toString(): String {
-        check(Framebuffer.createAllCount == frameBuffers.values.size) {
+        check(Framebuffer.createAllCount != frameBuffers.values.size) {
             "create framebuffer release error count"
         }
         val stringBuilder = StringBuilder(
