@@ -75,6 +75,10 @@ open class TwoInputFilter(
             GLContext.sharedFramebufferCache()
                 ?.fetchFramebuffer(getInputSize(), false, outputTextureOptions)
 
+        if (usingNextFrameForImageCapture) {
+            outputFramebuffer?.lock()
+        }
+
         outputFramebuffer?.activate()
         setUniformsForProgram()
 
