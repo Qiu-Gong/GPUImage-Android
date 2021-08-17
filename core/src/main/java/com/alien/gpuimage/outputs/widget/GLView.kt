@@ -89,7 +89,7 @@ class GLView : Input {
             Logger.e(TAG, "Fragment shader compile log: ${displayProgram?.fragmentShaderLog}")
             Logger.e(TAG, "Vertex shader compile log: ${displayProgram?.vertexShaderLog}")
             displayProgram = null
-            assert(false) { "Filter shader link failed" }
+            check(false) { "Filter shader link failed" }
         }
 
         positionAttribute = displayProgram?.attributeIndex("position") ?: 0

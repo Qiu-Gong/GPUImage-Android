@@ -15,6 +15,7 @@ class Framebuffer {
 
         var createAllCount = 0
             private set
+        var createList = mutableListOf<Int>()
     }
 
     var width: Int
@@ -54,6 +55,7 @@ class Framebuffer {
         }
 
         createAllCount++
+        createList.add(textureId)
     }
 
     constructor(width: Int, height: Int, inputTexture: Int) {
@@ -175,7 +177,7 @@ class Framebuffer {
             return
         }
 
-        assert(framebufferReferenceCount > 0) {
+        check(framebufferReferenceCount > 0) {
             "Tried to overrelease a framebuffer, did you forget to call -useNextFrameForImageCapture before using -imageFromCurrentFramebuffer?"
         }
 
@@ -201,6 +203,7 @@ class Framebuffer {
         Logger.d(TAG, "destroy framebufferId:$framebufferId textureId:$textureId")
         if (framebufferId > 0 || textureId > 0) {
             createAllCount--
+            createList.remove(textureId)
         }
 
         if (framebufferId > 0) {
@@ -215,10 +218,10 @@ class Framebuffer {
     }
 
     fun newImageFromFramebufferContents(): Bitmap? {
-        assert(textureAttributes.internalFormat == GLES20.GL_RGBA) {
+        check(textureAttributes.internalFormat == GLES20.GL_RGBA) {
             "For conversion to a Bitmap the output texture format for this filter must be GL_RGBA."
         }
-        assert(textureAttributes.type == GLES20.GL_UNSIGNED_BYTE) {
+        check(textureAttributes.type == GLES20.GL_UNSIGNED_BYTE) {
             "For conversion to a Bitmap the type of the output texture of this filter must be GL_UNSIGNED_BYTE."
         }
 

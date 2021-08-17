@@ -73,7 +73,7 @@ open class Filter(
                     )
                     Logger.e(TAG, "Vertex shader compile log: ${filterProgram?.vertexShaderLog}")
                     filterProgram = null
-                    assert(false) { "Filter shader link failed" }
+                    check(false) { "Filter shader link failed" }
                 }
 
                 positionAttribute = filterProgram?.attributeIndex("position") ?: 0
@@ -108,6 +108,7 @@ open class Filter(
     override fun release() {
         runSynchronouslyGpu(Runnable {
             outputFramebuffer?.unlock()
+            outputFramebuffer = null
             GLContext.deleteProgram(filterProgram)
         })
     }
@@ -120,6 +121,7 @@ open class Filter(
         usingNextFrameForImageCapture = false
         val result = outputFramebuffer?.newImageFromFramebufferContents()
         outputFramebuffer?.unlock()
+        outputFramebuffer = null
         return result
     }
 
@@ -183,9 +185,17 @@ open class Filter(
             input.setInputRotation(inputRotation, textureIndices)
             input.setInputSize(inputSize, textureIndices)
             input.setInputFramebuffer(outputFramebuffer, textureIndices)
+        }
+
+        outputFramebuffer?.unlock()
+        if (!usingNextFrameForImageCapture) {
+            outputFramebuffer = null
+        }
+
+        targets.forEachIndexed { index, input ->
+            val textureIndices = targetTextureIndices[index]
             input.newFrameReadyAtTime(time, textureIndices)
         }
-        outputFramebuffer?.unlock()
     }
 
     open fun rotatedSize(sizeToRotate: Size, textureIndex: Int): Size {
@@ -251,6 +261,7 @@ open class Filter(
         val copyFramebuffer =
             GLContext.sharedFramebufferCache()
                 ?.fetchFramebuffer(outputSize, false, outputTextureOptions)
+        Logger.d(TAG, "copyFrameBuffer copyFramebuffer:${copyFramebuffer.toString()}}")
 
         copyFramebuffer?.activate()
         setUniformsForProgram()

@@ -97,7 +97,7 @@ class Picture : Output {
     }
 
     private fun loadImageToFBO() {
-        assert(bitmap?.width ?: 0 > 0 && bitmap?.height ?: 0 > 0)
+        check(bitmap?.width ?: 0 > 0 && bitmap?.height ?: 0 > 0)
 
         GLContext.useProcessingContext()
         pixelSizeOfImage = GLContext.withinTextureForSize(Size(bitmap!!.width, bitmap!!.height))

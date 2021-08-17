@@ -3,7 +3,6 @@ package com.alien.gpuimage.filter
 import android.opengl.GLES20
 import com.alien.gpuimage.GLContext
 import com.alien.gpuimage.Size
-import com.alien.gpuimage.filter.Filter
 import java.nio.FloatBuffer
 
 
@@ -70,9 +69,17 @@ class ChangeSizeFilter : Filter() {
             input.setInputRotation(getInputRotation(), textureIndices)
             input.setInputSize(if (hasNewSize()) newOutputSize else getInputSize(), textureIndices)
             input.setInputFramebuffer(outputFramebuffer, textureIndices)
+        }
+
+        outputFramebuffer?.unlock()
+        if (!usingNextFrameForImageCapture) {
+            outputFramebuffer = null
+        }
+
+        targets.forEachIndexed { index, input ->
+            val textureIndices = targetTextureIndices[index]
             input.newFrameReadyAtTime(time, textureIndices)
         }
-        outputFramebuffer?.unlock()
     }
 
     private fun hasNewSize(): Boolean {

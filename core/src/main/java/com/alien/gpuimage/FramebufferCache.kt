@@ -35,13 +35,9 @@ class FramebufferCache {
         val lookupHash = getHash(width, height, onlyTexture, textureAttributes)
         val numberOfMatchingFrameBuffers = framebufferTypeCounts[lookupHash] ?: 0
 
-        Logger.d(
-            TAG,
-            "fetchFramebuffer lookupHash:$lookupHash numberOfMatching:$numberOfMatchingFrameBuffers"
-        )
         if (numberOfMatchingFrameBuffers < 1) {
-            Logger.d(TAG, "fetchFramebuffer new Framebuffer")
             framebufferFromCache = Framebuffer(width, height, textureAttributes, onlyTexture)
+            Logger.d(TAG, "获取 new Framebuffer:$framebufferFromCache")
         } else {
             var curFramebufferId = numberOfMatchingFrameBuffers - 1
             while (framebufferFromCache == null && curFramebufferId >= 0) {
@@ -60,6 +56,7 @@ class FramebufferCache {
             if (framebufferFromCache == null) {
                 framebufferFromCache = Framebuffer(width, height, textureAttributes, onlyTexture)
             }
+            Logger.d(TAG, "获取 Framebuffer:$framebufferFromCache size:${frameBuffers.size}")
         }
         framebufferFromCache.lock()
         return framebufferFromCache
@@ -67,7 +64,9 @@ class FramebufferCache {
 
     fun returnFramebuffer(framebuffer: Framebuffer?) {
         if (framebuffer == null) return
+        Logger.d(TAG, "回收 framebuffer:$framebuffer")
 
+        framebuffer.clearAllLocks()
         val width = framebuffer.width
         val height = framebuffer.height
         val textureAttributes = framebuffer.textureAttributes
@@ -76,7 +75,13 @@ class FramebufferCache {
 
         val framebufferHash = String.format("%s-%d", lookupHash, numberOfMatchingFrameBuffers)
         frameBuffers[framebufferHash] = framebuffer
-        framebufferTypeCounts[lookupHash] = numberOfMatchingFrameBuffers + 1
+        framebufferTypeCounts[lookupHash] = (numberOfMatchingFrameBuffers + 1)
+
+        val builder = StringBuilder()
+        frameBuffers.values.forEach {
+            builder.append(it.textureId).append(":")
+        }
+        Logger.d(TAG, "回收后 size:${frameBuffers.size} textures:$builder")
     }
 
     private fun getHash(
@@ -125,7 +130,15 @@ class FramebufferCache {
     }
 
     override fun toString(): String {
-        val stringBuilder = StringBuilder("createCnt:${Framebuffer.createAllCount} frameBuffers:${frameBuffers.values.size}\n")
+        check(Framebuffer.createAllCount == frameBuffers.values.size) {
+            "create framebuffer release error count"
+        }
+        val stringBuilder = StringBuilder(
+            "createCnt:${Framebuffer.createAllCount} create:${
+                Framebuffer.createList.toIntArray().contentToString()
+            } frameBuffers:${frameBuffers.values.size}\n"
+        )
+
         val iterator = frameBuffers.values.iterator()
         iterator.forEach {
             stringBuilder.append(it.toString()).append("\n")

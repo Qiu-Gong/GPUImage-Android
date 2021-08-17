@@ -48,7 +48,7 @@ class CropFilter : Filter() {
      * 设置裁剪框
      */
     fun setCropRegion(rectF: RectF) {
-        assert(
+        check(
             rectF.left in 0.0..1.0 && rectF.top in 0.0..1.0 &&
                     rectF.right in 0.0..1.0 && rectF.bottom in 0.0..1.0
         )

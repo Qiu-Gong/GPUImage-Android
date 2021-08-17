@@ -130,12 +130,12 @@ class GLProgram() {
     }
 
     fun attributeIndex(attributeName: String): Int {
-        assert(GLContext.currentContextIsExist()) { "当前上下文不存在" }
+        check(GLContext.currentContextIsExist()) { "当前上下文不存在" }
         return attributes.indexOf(attributeName)
     }
 
     fun uniformIndex(uniformName: String): Int {
-        assert(GLContext.currentContextIsExist()) { "当前上下文不存在" }
+        check(GLContext.currentContextIsExist()) { "当前上下文不存在" }
         return GLES20.glGetUniformLocation(program, uniformName)
     }
 

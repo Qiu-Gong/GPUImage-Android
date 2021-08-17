@@ -91,7 +91,7 @@ class GLOesTexture : Output() {
                 Logger.e(TAG, "Fragment shader compile log: ${oesProgram?.fragmentShaderLog}")
                 Logger.e(TAG, "Vertex shader compile log: ${oesProgram?.vertexShaderLog}")
                 oesProgram = null
-                assert(false) { "Filter shader link failed" }
+                check(false) { "Filter shader link failed" }
             }
 
             positionAttribute = oesProgram?.attributeIndex("position") ?: 0
@@ -134,7 +134,10 @@ class GLOesTexture : Output() {
     fun onFrameAvailable(surfaceTexture: SurfaceTexture?, presentationTimeUs: Long) {
         runSynchronously(Runnable {
             surfaceTexture?.updateTexImage()
-            renderToTexture(DataBuffer.IMAGE_VERTICES, DataBuffer.textureCoordinatesForRotation(videoRotation, false))
+            renderToTexture(
+                DataBuffer.IMAGE_VERTICES,
+                DataBuffer.textureCoordinatesForRotation(videoRotation, false)
+            )
             informTargetsAboutNewFrameAtTime(presentationTimeUs)
         })
     }
@@ -180,9 +183,15 @@ class GLOesTexture : Output() {
             input.setInputRotation(outputRotation, textureIndices)
             input.setInputSize(oesSize, textureIndices)
             input.setInputFramebuffer(outputFramebuffer, textureIndices)
+        }
+
+        outputFramebuffer?.unlock()
+        outputFramebuffer = null
+
+        targets.forEachIndexed { index, input ->
+            val textureIndices = targetTextureIndices[index]
             input.newFrameReadyAtTime(time, textureIndices)
         }
-        outputFramebuffer?.unlock()
     }
 
     override fun release() {
@@ -193,6 +202,7 @@ class GLOesTexture : Output() {
             }
 
             outputFramebuffer?.unlock()
+            outputFramebuffer = null
             GLContext.deleteProgram(oesProgram)
         })
     }
