@@ -123,12 +123,14 @@ class Picture : Output {
 
     private inner class ProcessRunnable : Runnable {
         override fun run() {
+            val time = System.currentTimeMillis()
             targets.forEachIndexed { index, input ->
                 val textureIndices = targetTextureIndices[index]
                 input.setInputSize(pixelSizeOfImage, textureIndices)
                 input.setInputFramebuffer(outputFramebuffer, textureIndices)
                 input.newFrameReadyAtTime(System.currentTimeMillis(), textureIndices)
             }
+            Logger.d(TAG, "picture time:${System.currentTimeMillis() - time}")
         }
     }
 }
