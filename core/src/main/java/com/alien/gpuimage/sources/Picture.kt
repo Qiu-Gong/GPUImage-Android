@@ -120,7 +120,7 @@ class Picture : Output {
                 it.enableReferenceCounting()
                 it.unlock()
             }
-        }
+        })
     }
 
     private inner class ProcessRunnable : Runnable {
