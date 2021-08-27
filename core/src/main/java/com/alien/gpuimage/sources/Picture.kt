@@ -125,6 +125,7 @@ class Picture : Output {
 
     private inner class ProcessRunnable : Runnable {
         override fun run() {
+            if (pixelSizeOfImage == null) return
             val time = System.currentTimeMillis()
             targets.forEachIndexed { index, input ->
                 val textureIndices = targetTextureIndices[index]
