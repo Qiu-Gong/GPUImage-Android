@@ -115,9 +115,11 @@ class Picture : Output {
     }
 
     override fun release() {
-        outputFramebuffer?.let {
-            it.enableReferenceCounting()
-            it.unlock()
+        runSynchronously(Runnable {
+            outputFramebuffer?.let {
+                it.enableReferenceCounting()
+                it.unlock()
+            }
         }
     }
 
