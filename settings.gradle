@@ -1,3 +1,4 @@
 rootProject.name = "GPUImage"
 include ':app'
 include ':core'
+include ':gif-lib'
