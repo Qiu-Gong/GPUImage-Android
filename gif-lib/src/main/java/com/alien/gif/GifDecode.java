@@ -7,17 +7,18 @@ import android.util.Log;
 
 import com.getkeepsafe.relinker.ReLinker;
 
-public class GifInterface {
+public class GifDecode {
 
     private static final String TAG = "GifInterface";
     private static final String LIB_NAME = "gif-lib";
+    private static final int ERROR_VALUE = -1;
 
     private static volatile boolean hasLoaded = false;
-    private long instanceId = -1;
+    private long instanceId = ERROR_VALUE;
 
     private static void loadLibrary(Context context) {
         if (!hasLoaded) {
-            synchronized (GifInterface.class) {
+            synchronized (GifDecode.class) {
                 try {
                     if (!hasLoaded) {
                         if (Build.VERSION.SDK_INT >= 24) {
@@ -36,26 +37,55 @@ public class GifInterface {
         }
     }
 
-    public GifInterface(Context context) {
+    public GifDecode(Context context) {
         loadLibrary(context);
     }
 
     public void loadGif(String path) {
         instanceId = onNativeLoadGif(path);
-        if (instanceId == -1) {
-            Log.d(TAG, "loadGif error");
+        if (instanceId == ERROR_VALUE) {
+            Log.e(TAG, "loadGif error");
         }
     }
 
+    public void release() {
+        long result = onNativeRelease(instanceId);
+        if (result != ERROR_VALUE) {
+            Log.e(TAG, "release error");
+        }
+        instanceId = result;
+    }
+
     public int getWidth() {
+        if (instanceId == ERROR_VALUE) {
+            Log.e(TAG, "getWidth error");
+            return ERROR_VALUE;
+        }
+
         return onNativeWidth(instanceId);
     }
 
     public int getHeight() {
+        if (instanceId == ERROR_VALUE) {
+            Log.e(TAG, "getHeight error");
+            return ERROR_VALUE;
+        }
+
         return onNativeHeight(instanceId);
     }
 
+    public int updateFrame(Bitmap bitmap) {
+        if (instanceId == ERROR_VALUE) {
+            Log.e(TAG, "updateFrame error");
+            return ERROR_VALUE;
+        }
+
+        return onNativeUpdateFrame(instanceId, bitmap);
+    }
+
     private static native long onNativeLoadGif(String path);
+
+    private static native long onNativeRelease(long instanceId);
 
     private static native int onNativeWidth(long instanceId);
 

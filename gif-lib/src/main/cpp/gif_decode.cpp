@@ -17,11 +17,11 @@ struct GifBean {
 
 extern "C"
 JNIEXPORT jlong JNICALL
-Java_com_alien_gif_GifInterface_onNativeLoadGif(JNIEnv *env, jclass clazz, jstring path) {
+Java_com_alien_gif_GifDecode_onNativeLoadGif(JNIEnv *env, jclass clazz, jstring path) {
     const char *path_c = env->GetStringUTFChars(path, 0);
 
     // gif 操作
-    int gif_error;
+    int gif_error = D_GIF_SUCCEEDED;
     GifFileType *type = DGifOpenFileName(path_c, &gif_error);
     if (gif_error != D_GIF_SUCCEEDED) {
         LOGE("loadGif error:%d", gif_error);
@@ -34,21 +34,40 @@ Java_com_alien_gif_GifInterface_onNativeLoadGif(JNIEnv *env, jclass clazz, jstri
     memset(gifBean, 0, sizeof(GifBean));
     gifBean->current = 0;
     gifBean->total = type->ImageCount;
+    type->UserData = gifBean;
 
     env->ReleaseStringUTFChars(path, path_c);
     return (jlong) (type);
 }
 
 extern "C"
+JNIEXPORT jlong JNICALL
+Java_com_alien_gif_GifDecode_onNativeRelease(JNIEnv *env, jclass clazz, jlong instance_id) {
+    auto *type = reinterpret_cast<GifFileType *>(instance_id);
+    if (type->UserData != nullptr) {
+        free(type->UserData);
+    }
+
+    int gif_error = D_GIF_SUCCEEDED;
+    DGifCloseFile(type, &gif_error);
+    if (gif_error != D_GIF_SUCCEEDED) {
+        LOGE("Release error:%d", gif_error);
+        return (jlong) (type);
+    }
+
+    return -1;
+}
+
+extern "C"
 JNIEXPORT jint JNICALL
-Java_com_alien_gif_GifInterface_onNativeWidth(JNIEnv *env, jclass clazz, jlong instance_id) {
+Java_com_alien_gif_GifDecode_onNativeWidth(JNIEnv *env, jclass clazz, jlong instance_id) {
     auto *type = reinterpret_cast<GifFileType *>(instance_id);
     return type->SWidth;
 }
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_alien_gif_GifInterface_onNativeHeight(JNIEnv *env, jclass clazz, jlong instance_id) {
+Java_com_alien_gif_GifDecode_onNativeHeight(JNIEnv *env, jclass clazz, jlong instance_id) {
     auto *type = reinterpret_cast<GifFileType *>(instance_id);
     return type->SHeight;
 }
@@ -63,6 +82,9 @@ int drawFrame(GifFileType *gifFileType, AndroidBitmapInfo info, int *pixels) {
     auto frame = gifFileType->SavedImages[bean->current];
     auto desc = frame.ImageDesc;
     auto *colorMap = desc.ColorMap;
+    if (nullptr == colorMap) {
+        colorMap = gifFileType->SColorMap;
+    }
 
     int *px = (int *) pixels;
     int *line;
@@ -85,8 +107,8 @@ int drawFrame(GifFileType *gifFileType, AndroidBitmapInfo info, int *pixels) {
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_alien_gif_GifInterface_onNativeUpdateFrame(JNIEnv *env, jclass clazz, jlong instance_id,
-                                                    jobject bitmap) {
+Java_com_alien_gif_GifDecode_onNativeUpdateFrame(JNIEnv *env, jclass clazz, jlong instance_id,
+                                                 jobject bitmap) {
     auto *type = reinterpret_cast<GifFileType *>(instance_id);
     int *pixels = nullptr;
     int delay = 0;

@@ -13,7 +13,7 @@ find_library(jnigraphics-lib jnigraphics)
 add_library(
         gif-lib
         SHARED
-        gif-lib.cpp
+        gif_decode.cpp
 
         gif/dgif_lib.c
         gif/gifalloc.c
