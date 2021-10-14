@@ -12,7 +12,7 @@ import com.alien.gpuimage.utils.Logger
 /**
  * Bitmap 输入
  */
-class Picture : Output {
+class Picture(bitmap: Bitmap? = null, recycle: Boolean) : Output() {
 
     companion object {
         private const val TAG = "Picture"
@@ -24,7 +24,7 @@ class Picture : Output {
     private var pixelSizeOfImage: Size? = null
     private var processRunnable = ProcessRunnable()
 
-    constructor(bitmap: Bitmap? = null, recycle: Boolean) {
+    init {
         init(bitmap, recycle)
     }
 

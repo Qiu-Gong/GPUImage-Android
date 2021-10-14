@@ -18,7 +18,7 @@ import java.nio.ByteOrder
 class BitmapView : Input {
 
     companion object {
-        private const val TAG = "BitmapImageView"
+        private const val TAG = "BitmapView"
     }
 
     private var inputFramebuffer: Framebuffer? = null
