@@ -41,6 +41,7 @@ dependencies {
     implementation "androidx.core:core-ktx:$corektx"
     implementation "androidx.appcompat:appcompat:$appcompat"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesktx"
 }
 
 // 打包
