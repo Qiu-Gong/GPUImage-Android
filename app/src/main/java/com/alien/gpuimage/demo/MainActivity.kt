@@ -4,13 +4,12 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.alien.gif.GifDecode
+import com.alien.gif.GifTranscoder
 import com.alien.gpuimage.GLContext
 import com.zhihu.matisse.Matisse
 import com.zhihu.matisse.MimeType
@@ -80,22 +79,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.gif).setOnClickListener {
-            thread {
-                val gif = GifDecode(this)
-                gif.loadGif("sdcard/1.gif")
-                if (gif.width == -1 || gif.height == -1) {
-                    return@thread
-                }
+//            thread {
+//                val gif = GifDecode(this)
+//                gif.loadGif("sdcard/1.gif")
+//                if (gif.width == -1 || gif.height == -1) {
+//                    return@thread
+//                }
+//
+//                val bitmap = Bitmap.createBitmap(gif.width, gif.height, Bitmap.Config.ARGB_8888)
+//                var delay = 1
+//                while (delay != -1 && delay != 0) {
+//                    delay = gif.updateFrame(bitmap)
+//                    if (delay > 0) {
+//                        Thread.sleep(delay.toLong())
+//                    }
+//                }
+//                gif.release()
+//            }
 
-                val bitmap = Bitmap.createBitmap(gif.width, gif.height, Bitmap.Config.ARGB_8888)
-                var delay = 1
-                while (delay != -1 && delay != 0) {
-                    delay = gif.updateFrame(bitmap)
-                    if (delay > 0) {
-                        Thread.sleep(delay.toLong())
-                    }
-                }
-                gif.release()
+            thread {
+                GifTranscoder.transcode(this, "sdcard/1.gif", "sdcard/2.gif")
             }
         }
     }

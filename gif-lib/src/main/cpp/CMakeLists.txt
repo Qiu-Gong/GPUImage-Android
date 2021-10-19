@@ -14,7 +14,10 @@ add_library(
         gif-lib
         SHARED
         gif_decode.cpp
+        GifTranscoder.cpp
 
+        gif/egif_lib.c
+        gif/gif_hash.c
         gif/dgif_lib.c
         gif/gifalloc.c
 )

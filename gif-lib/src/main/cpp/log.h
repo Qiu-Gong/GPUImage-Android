@@ -18,11 +18,16 @@ static int openLog = 1;
 #define LOGI(...)  do {if(openLog == 1) { (void)__android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__); }} while(0)
 #define LOGW(...)  do {if(openLog == 1) { (void)__android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__); }} while(0)
 #define LOGE(...)  do {if(openLog == 1) { (void)__android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__); }} while(0)
+#define ASSERT(cond, ...) \
+    ( (__builtin_expect((cond) == 0, 0)) \
+    ? ((void)__android_log_assert(#cond, LOG_TAG, ## __VA_ARGS__)) \
+    : (void) 0 )
 #else
 #define LOGD(...)
 #define LOGI(...)
 #define LOGW(...)
 #define LOGE(...)
+#define ASSERT(cond, ...)
 #endif // DEBUG
 
 #endif
