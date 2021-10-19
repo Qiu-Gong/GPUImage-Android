@@ -53,4 +53,5 @@ dependencies {
 
 //    implementation 'com.alien.gpuimage:gpuimage:1.0.0-09'
     implementation project(':core')
+    implementation project(':gif-lib')
 }
